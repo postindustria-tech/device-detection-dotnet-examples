@@ -123,20 +123,22 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             List<string> expectedAcceptCH,
             string exampleDirName) where T : class
         {
-            if(string.IsNullOrWhiteSpace(resourceKey))
+            if (string.IsNullOrWhiteSpace(resourceKey))
             {
                 Assert.Inconclusive("Unable to run this test as no " +
                     "resource key was passed from the relevant environment " +
                     "variables. (See ClientHintsExampleTestBase.GetEnvVars)");
             }
 
+
             // Determine the path to the app settings file we need to used
             string appSettingsPath = Environment.CurrentDirectory;
-            var pos = appSettingsPath.IndexOf("FiftyOne.DeviceDetection");
-            appSettingsPath = appSettingsPath.Remove(pos + "FiftyOne.DeviceDetection".Length);
+            var pos = appSettingsPath.IndexOf("Tests");
+            appSettingsPath = appSettingsPath.Remove(pos);
             appSettingsPath = Path.Combine(
                 appSettingsPath,
                 "Examples",
+                "Legacy Web",
                 exampleDirName,
                 "appsettings.json");
 

@@ -35,13 +35,13 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
     [TestClass]
     public class ClientHintsOnPremiseTest : ClientHintsExampleTestBase
     {
-        private string DataFilePath { get; set; }
+        private string DataFilePath { get; set; } 
 
         [TestInitialize]
         public void Init()
         {
             var dataFilePath = Environment.GetEnvironmentVariable(
-                "DEVICE_DETECTION_DATAFILE");
+                "DEVICEDETECTIONDATAFILE");
             if (string.IsNullOrWhiteSpace(dataFilePath) == false)
             {
                 DataFilePath = dataFilePath;
@@ -135,11 +135,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Determine the path to the app settings file we need to used
             string appSettingsPath = Environment.CurrentDirectory;
-            var pos = appSettingsPath.IndexOf("FiftyOne.DeviceDetection");
-            appSettingsPath = appSettingsPath.Remove(pos + "FiftyOne.DeviceDetection".Length);
+            var pos = appSettingsPath.IndexOf("Tests");
+            appSettingsPath = appSettingsPath.Remove(pos);
             appSettingsPath = Path.Combine(
                 appSettingsPath,
                 "Examples",
+                "Legacy Web",
                 exampleDirName,
                 "appsettings.json");
 

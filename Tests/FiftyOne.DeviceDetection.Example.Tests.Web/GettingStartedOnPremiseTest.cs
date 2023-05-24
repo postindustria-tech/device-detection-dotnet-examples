@@ -47,7 +47,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         [TestMethod]
         public async Task VerifyExample_OnPremise()
         {
-            GetKeyFromEnv("DEVICE_DETECTION_DATAFILE", v => DATA_FILE_PATH = v);
+            GetKeyFromEnv("DEVICEDETECTIONDATAFILE", v => DATA_FILE_PATH = v);
             await VerifyExample<Examples.OnPremise.GettingStartedWeb.Startup>(DATA_FILE_PATH);
         }
 

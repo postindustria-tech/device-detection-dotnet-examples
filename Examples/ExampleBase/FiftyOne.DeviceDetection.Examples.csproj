@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -79,21 +79,8 @@
     <None Remove="Framework\**" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="FiftyOne.DeviceDetection.Cloud" Version="4.4.23" />
-    <PackageReference Include="YamlDotNet" Version="11.2.1" />
-  </ItemGroup>
-
-  <Choose>
-    <When Condition="$(TestExamples51D)=='True'">
-      <ItemGroup>
-        <ProjectReference Include="..\..\FiftyOne.DeviceDetection\FiftyOne.DeviceDetection\FiftyOne.DeviceDetection.csproj" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.23" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
+	<ItemGroup>
+		<PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.23" />
+		<PackageReference Include="YamlDotNet" Version="11.2.1" />
+	</ItemGroup>
 </Project>

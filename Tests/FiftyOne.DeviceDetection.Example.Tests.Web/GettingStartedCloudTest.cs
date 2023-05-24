@@ -62,7 +62,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Determine the path to the app settings file we need to use
             string appSettingsPath = Environment.CurrentDirectory;
-            var pos = appSettingsPath.IndexOf("FiftyOne.DeviceDetection");
+            var pos = appSettingsPath.IndexOf("Tests");
             appSettingsPath = appSettingsPath.Remove(pos);
             appSettingsPath = Path.Combine(
                 appSettingsPath,

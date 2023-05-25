@@ -11,7 +11,7 @@ param(
 if ($BuildMethod -eq "dotnet"){
     Write-Output "$Configuration"
 
-    ./dotnet/build-project-core.ps1 -RepoName $RepoName -ProjectDir $ProjectDir -Name $Name -Configuration $Configuration -Arch $Arch
+    ./dotnet/build-project-core.ps1 -RepoName $RepoName -ProjectDir "FiftyOne.DeviceDetection.Examples.sln" -Name $Name -Configuration $Configuration -Arch $Arch
 
 }
 else{

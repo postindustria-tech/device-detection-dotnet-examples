@@ -1,1 +1,1 @@
-Write-Host "No Performance Tests to run"
+Write-Output "No Performance Tests to run"

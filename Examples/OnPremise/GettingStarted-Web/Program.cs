@@ -20,17 +20,17 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using FiftyOne.DeviceDetection.Examples;
 using FiftyOne.DeviceDetection.Hash.Engine.OnPremise.FlowElements;
 using FiftyOne.Pipeline.Core.Configuration;
+using FiftyOne.Pipeline.Web.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
 {
@@ -55,6 +55,11 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
                     {
                         c.AddJsonFile("appsettings.json")
                             .AddInMemoryCollection(overrides);
+                    })
+                    .UseKestrel(options =>
+                    {
+                        Constants.LOCALHOST_HTTP_PORTS.ForEach(port => options.ListenAnyIP(port));
+                        Constants.LOCALHOST_HTTPS_PORTS.ForEach(port => options.ListenAnyIP(port, config => config.UseHttps()));
                     })
                     .UseStartup<Startup>();
                 });
@@ -81,7 +86,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
                 .AddJsonFile("appsettings.json")
                 .Build();
             // Bind the configuration to a pipeline options instance
-            PipelineOptions options = new PipelineOptions();
+            PipelineOptions options = new PipelineWebIntegrationOptions();
             var section = config.GetRequiredSection("PipelineOptions");
             // Use the 'ErrorOnUnknownConfiguration' option to warn us if we've got any
             // misnamed configuration keys.

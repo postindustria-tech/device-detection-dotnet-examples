@@ -21,5 +21,10 @@
 
         public const string LICENSE_KEY_ENV_VAR = "DEVICEDETECTIONLICENSEKEY_DOTNET";
 
+        /// <summary>
+        /// Ports used for running web examples and their tests.
+        /// </summary>
+        public static readonly int[] LOCALHOST_HTTP_PORTS = new int[] { 5000 };
+        public static readonly int[] LOCALHOST_HTTPS_PORTS = new int[] { 5001, 5002 };
     }
 }

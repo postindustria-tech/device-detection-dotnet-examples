@@ -28,6 +28,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.DevTools;
 using OpenQA.Selenium.DevTools.V113;
+using OpenQA.Selenium.Support.UI;
+using Stubble.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -43,6 +45,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
     [TestClass]
     public class GettingStartedOnPremiseTest : WebExampleTestBase
     {
+        private const string STATIC_HTML_ENDPOINT = "/static.html";
+        private const string TEST_PAGE_ENDPOINT = "/testpage.html";
+
         /// <summary>
         /// Test that the 'GettingStarted-Web' example is able to run and 
         /// returns code 200 upon https request.
@@ -95,8 +100,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             {
                 return new[]
                 {
-                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[0]}/static.html" },
-                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[1]}/static.html" }
+                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[0]}" },
+                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[1]}" }
                 };
 
             }
@@ -118,8 +123,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     stopToken.Token);
 
             // Set up Selenium WebDriver
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--headless=new");
+            ChromeOptions options = SetupChromeOptions();
             using (var driver = new ChromeDriver(options))
             {
                 // Enable DevTools
@@ -131,8 +135,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
 
                 // Act
-                driver.Navigate().GoToUrl(url);
-
+                driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
+                                                
                 // Wait for the page to load
                 Thread.Sleep(TimeSpan.FromSeconds(3));
 
@@ -161,8 +165,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     stopToken.Token);
 
             // Set up Selenium WebDriver
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--headless=new");
+            ChromeOptions options = SetupChromeOptions();
             using (var driver = new ChromeDriver(options))
             {
                 // Enable DevTools
@@ -179,7 +182,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 {
                     var headers = e.Response.Headers;
                     var responseUrl = e.Response.Url;
-                    if (responseUrl.Equals($"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[0]}/51dpipeline/json"))
+                    if (responseUrl.Equals($"{UrlsData.ElementAt(0).Single()}/51dpipeline/json"))
                     {
                         foreach (var header in headers)
                         {
@@ -191,7 +194,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 // Act
                 // Do a cross origin request
                 var url = UrlsData.ElementAt(1).Single().ToString();
-                driver.Navigate().GoToUrl(url);
+                driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
 
                 // Wait for the page to load
                 Thread.Sleep(TimeSpan.FromSeconds(3));
@@ -204,6 +207,54 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 driver.Quit();
             }
             stopToken.Cancel(false);
+        }
+        [DataTestMethod]
+        [DynamicData(nameof(UrlsData))]
+        public void VerifyExample_GetHighEntropyValues_Fod_Completes(string url)
+        {
+            // Arrange
+            var stopToken = new CancellationTokenSource();
+            var serverTask = Task.Run(() =>
+                Examples.OnPremise.GettingStartedWeb.Program.Main(
+                    new string[] { }),
+                    stopToken.Token);
+
+            // Set up Selenium WebDriver
+            ChromeOptions options = SetupChromeOptions();
+
+            using (var driver = new ChromeDriver(options))
+            {
+                // Enable DevTools
+                var devTools = driver as IDevTools;
+                var session = devTools.GetDevToolsSession();
+                IJavaScriptExecutor js = driver;
+
+                var domains = session.GetVersionSpecificDomains<OpenQA.Selenium.DevTools.V113.DevToolsSessionDomains>();
+                domains.Network.Enable(new OpenQA.Selenium.DevTools.V113.Network.EnableCommandSettings());
+
+                driver.Navigate().GoToUrl(url + TEST_PAGE_ENDPOINT);
+
+                // This throws an exception if the timeout period elapses,
+                // which will cause the test to fail.
+                var complete = new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(
+                     driver =>
+                         js.ExecuteScript("return test").Equals("complete") &&
+                         js.ExecuteScript("return deviceid").Equals("loading") == false);
+
+
+                // Quit the driver
+                driver.Quit();
+            }
+            stopToken.Cancel(false);
+
+        }
+
+        private static ChromeOptions SetupChromeOptions()
+        {
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--headless=new");
+            options.AddArgument("--whitelisted-ips=''");
+            return options;
         }
 
     }

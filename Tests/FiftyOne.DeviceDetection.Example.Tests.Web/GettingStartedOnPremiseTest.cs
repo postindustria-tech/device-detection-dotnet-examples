@@ -92,7 +92,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     new string[] { }), 
                     stopToken.Token);
             
-            Thread.Sleep(TimeSpan.FromSeconds(10));
+            Thread.Sleep(TimeSpan.FromSeconds(20));
             
             using (var http = new HttpClient())
             {
@@ -147,7 +147,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }),
                     stopToken.Token);
-            Thread.Sleep(TimeSpan.FromSeconds(10));
+            Thread.Sleep(TimeSpan.FromSeconds(20));
 
             using (_driver)
             {
@@ -163,7 +163,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 _driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
                                                 
                 // Wait for the page to load
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                Thread.Sleep(TimeSpan.FromSeconds(10));
 
                 var cookies = domains.Network.GetAllCookies().Result;
                 var fod_cookie = cookies.Cookies.Where(c => c.Name == "51D_GetHighEntropyValues").Single();
@@ -188,7 +188,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }),
                     stopToken.Token);
-            Thread.Sleep(TimeSpan.FromSeconds(10));
+            Thread.Sleep(TimeSpan.FromSeconds(20));
             using (_driver)
             {
                 // Enable DevTools
@@ -220,7 +220,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 _driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
 
                 // Wait for the page to load
-                Thread.Sleep(TimeSpan.FromSeconds(3));
+                Thread.Sleep(TimeSpan.FromSeconds(10));
 
                 // Assert
                 // Verify that the response contains the header
@@ -241,7 +241,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }),
                     stopToken.Token);
-            Thread.Sleep(TimeSpan.FromSeconds(10));
+            Thread.Sleep(TimeSpan.FromSeconds(20));
             using (_driver)
             {
                 // Enable DevTools

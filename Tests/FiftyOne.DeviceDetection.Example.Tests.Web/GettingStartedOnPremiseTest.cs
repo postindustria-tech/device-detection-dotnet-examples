@@ -21,6 +21,7 @@
  * ********************************************************************* */
 
 using FiftyOne.DeviceDetection.Examples;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,6 +34,7 @@ using Stubble.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -41,8 +43,6 @@ using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
 
-/// TODO: Verify that selenium is setup and produces a warning instead of failing when it isnt installed 
-/// inconclusive.
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
     [TestClass]
@@ -91,9 +91,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }), 
                     stopToken.Token);
-            
-            Thread.Sleep(TimeSpan.FromSeconds(20));
-            
+
+            WaitForServer(String.Format("http://localhost:{0}", port));
+
             using (var http = new HttpClient())
             {
                 var request = new HttpRequestMessage
@@ -113,7 +113,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 if (response != null) { response.Dispose(); }
             }
             stopToken.Cancel(false);
-
 
         }
 
@@ -147,7 +146,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }),
                     stopToken.Token);
-            Thread.Sleep(TimeSpan.FromSeconds(20));
+
+            WaitForServer(url);
 
             using (_driver)
             {
@@ -161,9 +161,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
                 // Act
                 _driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
-                                                
+
                 // Wait for the page to load
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                Thread.Sleep(TimeSpan.FromSeconds(3));
 
                 var cookies = domains.Network.GetAllCookies().Result;
                 var fod_cookie = cookies.Cookies.Where(c => c.Name == "51D_GetHighEntropyValues").Single();
@@ -179,6 +179,43 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             stopToken.Cancel(false);
 
         }
+
+        private static void WaitForServer(string url)
+        {
+            // Wait for the server to start listening on the specified port
+            var timeout = TimeSpan.FromSeconds(10);
+            var stopwatch = Stopwatch.StartNew();
+            while (stopwatch.Elapsed < timeout)
+            {
+                try
+                {
+                    using (var client = new HttpClient())
+                    {
+                        client.DefaultRequestHeaders.UserAgent.Add(new System.Net.Http.Headers.ProductInfoHeaderValue("abc", "1"));
+                        var response = client.GetAsync(url).Result;
+                        if (response.StatusCode.Equals(HttpStatusCode.OK))
+                        {
+                            // Server started successfully
+                            break;
+                        }
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    // Ignore exception and continue looping
+                }
+
+                // Wait for a short interval before the next attempt
+                Task.Delay(500);
+            }
+            if (stopwatch.Elapsed >= timeout)
+            {
+                // Server failed to start within the specified timeout
+                throw new TimeoutException("Failed to start the server within the specified timeout.");
+            }
+        }
+
         [TestMethod]
         public void VerifyExample_GetHighEntropyValues_Contains_CORS_Response_Header()
         {
@@ -188,7 +225,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }),
                     stopToken.Token);
-            Thread.Sleep(TimeSpan.FromSeconds(20));
+            WaitForServer("https://localhost:5001");
+
             using (_driver)
             {
                 // Enable DevTools
@@ -220,7 +258,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 _driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
 
                 // Wait for the page to load
-                Thread.Sleep(TimeSpan.FromSeconds(10));
+                Thread.Sleep(TimeSpan.FromSeconds(3));
 
                 // Assert
                 // Verify that the response contains the header
@@ -241,7 +279,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }),
                     stopToken.Token);
-            Thread.Sleep(TimeSpan.FromSeconds(20));
             using (_driver)
             {
                 // Enable DevTools

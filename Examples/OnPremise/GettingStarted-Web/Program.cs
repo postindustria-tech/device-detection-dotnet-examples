@@ -61,7 +61,8 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
                         Constants.LOCALHOST_HTTP_PORTS.ForEach(port => options.ListenAnyIP(port));
                         Constants.LOCALHOST_HTTPS_PORTS.ForEach(port => options.ListenAnyIP(port, config => config.UseHttps()));
                     })
-                    .UseStartup<Startup>();
+                    .UseStartup<Startup>()
+                    .UseStaticWebAssets();
                 });
 
         /// <summary>

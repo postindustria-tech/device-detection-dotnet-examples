@@ -124,7 +124,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Set up Selenium WebDriver
             ChromeOptions options = SetupChromeOptions();
-            using (var driver = new ChromeDriver(options))
+            ChromeDriverService service = SetupChromeService();
+            using (var driver = new ChromeDriver(service, options))
             {
                 // Enable DevTools
                 var devTools = driver as IDevTools;
@@ -166,7 +167,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Set up Selenium WebDriver
             ChromeOptions options = SetupChromeOptions();
-            using (var driver = new ChromeDriver(options))
+            ChromeDriverService service = SetupChromeService();
+
+            using (var driver = new ChromeDriver(service, options))
             {
                 // Enable DevTools
                 var devTools = driver as IDevTools;
@@ -221,8 +224,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Set up Selenium WebDriver
             ChromeOptions options = SetupChromeOptions();
+            ChromeDriverService service = SetupChromeService();
 
-            using (var driver = new ChromeDriver(options))
+            using (var driver = new ChromeDriver(service, options))
             {
                 // Enable DevTools
                 var devTools = driver as IDevTools;
@@ -256,7 +260,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             options.AddArgument("--whitelisted-ips=''");
             return options;
         }
-
+        private static ChromeDriverService SetupChromeService()
+        {
+            ChromeDriverService service = ChromeDriverService.CreateDefaultService();
+            service.WhitelistedIPAddresses = " ";
+            return service;
+        }
     }
 
 }

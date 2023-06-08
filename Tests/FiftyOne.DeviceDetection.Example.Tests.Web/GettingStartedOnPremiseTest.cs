@@ -50,6 +50,26 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
     {
         private const string STATIC_HTML_ENDPOINT = "/static.html";
         private const string TEST_PAGE_ENDPOINT = "/testpage.html";
+        private WebDriver _driver;
+
+        [TestInitialize]
+        public void Init()
+        {
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AcceptInsecureCertificates = true;
+            // run in headless mode.
+            chromeOptions.AddArgument("--headless=new");
+            try
+            {
+                _driver = new ChromeDriver(chromeOptions);
+            }
+            catch (WebDriverException)
+            {
+                Assert.Inconclusive("Could not create a ChromeDriver, check " +
+                    "that the Chromium driver is installed");
+            }
+
+        }
 
         /// <summary>
         /// Test that the 'GettingStarted-Web' example is able to run and 
@@ -76,7 +96,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri(String.Format("http://127.0.0.1:{0}",port))
+                    RequestUri = new Uri(String.Format("http://localhost:{0}",port))
                 };
                 request.Headers.Add("User-Agent", "abc");
 
@@ -103,8 +123,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             {
                 return new[]
                 {
-                    new object[] { $"https://127.0.0.1:{Constants.LOCALHOST_HTTPS_PORTS[0]}" },
-                    new object[] { $"https://127.0.0.1:{Constants.LOCALHOST_HTTPS_PORTS[1]}" }
+                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[0]}" },
+                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[1]}" }
                 };
 
             }
@@ -125,12 +145,10 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     new string[] { }),
                     stopToken.Token);
 
-            // Set up Selenium WebDriver
-            ChromeOptions options = SetupChromeOptions();
-            using (var driver = new ChromeDriver(options))
+            using (_driver)
             {
                 // Enable DevTools
-                var devTools = driver as IDevTools;
+                var devTools = _driver as IDevTools;
                 var session = devTools.GetDevToolsSession();
 
                 var domains = session.GetVersionSpecificDomains<OpenQA.Selenium.DevTools.V113.DevToolsSessionDomains>();
@@ -138,7 +156,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
 
                 // Act
-                driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
+                _driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
                                                 
                 // Wait for the page to load
                 Thread.Sleep(TimeSpan.FromSeconds(3));
@@ -152,7 +170,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Assert.IsTrue(Convert.TryFromBase64String(fod_cookie.Value, bytes, out int _));
 
                 // Quit the driver
-                driver.Quit();
+                _driver.Quit();
             }
             stopToken.Cancel(false);
 
@@ -167,13 +185,10 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     new string[] { }),
                     stopToken.Token);
 
-            // Set up Selenium WebDriver
-            ChromeOptions options = SetupChromeOptions();
-
-            using (var driver = new ChromeDriver(options))
+            using (_driver)
             {
                 // Enable DevTools
-                var devTools = driver as IDevTools;
+                var devTools = _driver as IDevTools;
                 var session = devTools.GetDevToolsSession();
 
                 var domains = session.GetVersionSpecificDomains<OpenQA.Selenium.DevTools.V113.DevToolsSessionDomains>();
@@ -198,7 +213,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 // Act
                 // Do a cross origin request
                 var url = UrlsData.ElementAt(1).Single().ToString();
-                driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
+                _driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
 
                 // Wait for the page to load
                 Thread.Sleep(TimeSpan.FromSeconds(3));
@@ -208,7 +223,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Assert.IsTrue(headerValuePairs.ContainsKey("access-control-allow-origin"));
 
                 // Quit the driver
-                driver.Quit();
+                _driver.Quit();
             }
             stopToken.Cancel(false);
         }
@@ -223,44 +238,33 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     new string[] { }),
                     stopToken.Token);
 
-            // Set up Selenium WebDriver
-            ChromeOptions options = SetupChromeOptions();
-
-            using (var driver = new ChromeDriver(options))
+            using (_driver)
             {
                 // Enable DevTools
-                var devTools = driver as IDevTools;
+                var devTools = _driver as IDevTools;
                 var session = devTools.GetDevToolsSession();
-                IJavaScriptExecutor js = driver;
+                IJavaScriptExecutor js = _driver;
 
                 var domains = session.GetVersionSpecificDomains<OpenQA.Selenium.DevTools.V113.DevToolsSessionDomains>();
                 domains.Network.Enable(new OpenQA.Selenium.DevTools.V113.Network.EnableCommandSettings());
 
-                driver.Navigate().GoToUrl(url + TEST_PAGE_ENDPOINT);
+                _driver.Navigate().GoToUrl(url + TEST_PAGE_ENDPOINT);
 
                 // This throws an exception if the timeout period elapses,
                 // which will cause the test to fail.
-                var complete = new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(
+                var complete = new WebDriverWait(_driver, TimeSpan.FromSeconds(20)).Until(
                      driver =>
                          js.ExecuteScript("return test").Equals("complete") &&
                          js.ExecuteScript("return deviceid").Equals("loading") == false);
 
 
-                // Quit the driver
-                driver.Quit();
+                // Quit the _driver
+                _driver.Quit();
             }
             stopToken.Cancel(false);
 
         }
-
-        private static ChromeOptions SetupChromeOptions()
-        {
-            ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--headless=new");
-            options.AcceptInsecureCertificates = true;
-            return options;
-        }
-        
+       
     }
 
 }

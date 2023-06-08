@@ -40,6 +40,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
 
+
+/// TODO: Verify that selenium is setup and produces a warning instead of failing when it isnt installed 
+/// inconclusive.
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
     [TestClass]
@@ -124,8 +127,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Set up Selenium WebDriver
             ChromeOptions options = SetupChromeOptions();
-            ChromeDriverService service = SetupChromeService();
-            using (var driver = new ChromeDriver(service, options))
+            using (var driver = new ChromeDriver(options))
             {
                 // Enable DevTools
                 var devTools = driver as IDevTools;
@@ -167,9 +169,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Set up Selenium WebDriver
             ChromeOptions options = SetupChromeOptions();
-            ChromeDriverService service = SetupChromeService();
 
-            using (var driver = new ChromeDriver(service, options))
+            using (var driver = new ChromeDriver(options))
             {
                 // Enable DevTools
                 var devTools = driver as IDevTools;
@@ -224,9 +225,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Set up Selenium WebDriver
             ChromeOptions options = SetupChromeOptions();
-            ChromeDriverService service = SetupChromeService();
 
-            using (var driver = new ChromeDriver(service, options))
+            using (var driver = new ChromeDriver(options))
             {
                 // Enable DevTools
                 var devTools = driver as IDevTools;
@@ -257,15 +257,10 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         {
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--headless=new");
-            options.AddArgument("--whitelisted-ips=''");
+            options.AcceptInsecureCertificates = true;
             return options;
         }
-        private static ChromeDriverService SetupChromeService()
-        {
-            ChromeDriverService service = ChromeDriverService.CreateDefaultService();
-            service.WhitelistedIPAddresses = " ";
-            return service;
-        }
+        
     }
 
 }

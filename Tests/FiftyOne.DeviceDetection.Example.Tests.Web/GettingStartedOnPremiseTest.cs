@@ -76,7 +76,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 var request = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
-                    RequestUri = new Uri(String.Format("http://localhost:{0}",port))
+                    RequestUri = new Uri(String.Format("http://127.0.01:{0}",port))
                 };
                 request.Headers.Add("User-Agent", "abc");
 
@@ -103,8 +103,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             {
                 return new[]
                 {
-                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[0]}" },
-                    new object[] { $"https://localhost:{Constants.LOCALHOST_HTTPS_PORTS[1]}" }
+                    new object[] { $"https://127.0.01:{Constants.LOCALHOST_HTTPS_PORTS[0]}" },
+                    new object[] { $"https://127.0.01:{Constants.LOCALHOST_HTTPS_PORTS[1]}" }
                 };
 
             }

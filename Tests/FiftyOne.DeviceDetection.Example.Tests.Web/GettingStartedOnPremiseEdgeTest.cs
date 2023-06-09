@@ -188,3 +188,4 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             }
         }
     }
+}

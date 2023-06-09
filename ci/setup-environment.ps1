@@ -23,8 +23,6 @@ if ($IsLinux) {
 
 }
 
-dotnet dev-certs https -t 
-
 $env:DEVICEDETECTIONDATAFILE = [IO.Path]::Combine($RepoPath, "device-detection-data", "TAC-HashV41.hash")
 $env:SUPER_RESOURCE_KEY = $Keys.TestResourceKey
 $env:DEVICEDETECTIONLICENSEKEY_DOTNET = $Keys.DeviceDetection

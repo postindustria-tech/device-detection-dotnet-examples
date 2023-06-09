@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.19" />
+    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.20" />
     <PackageReference Include="WebDriverManager" Version="2.16.2" />
   </ItemGroup>
 

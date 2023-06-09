@@ -98,6 +98,11 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     stopToken.Token);
                     
             Thread.Sleep(TimeSpan.FromSeconds(10));
+            
+            if (serverTask.IsFaulted)
+            {
+                throw serverTask.Exception;
+            }
 
             using (var http = new HttpClient())
             {
@@ -152,6 +157,11 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     new string[] { }),
                     stopToken.Token);
             Thread.Sleep(TimeSpan.FromSeconds(10));
+            
+            if (serverTask.IsFaulted)
+            {
+                throw serverTask.Exception;
+            }
 
             using (_driver)
             {
@@ -194,6 +204,10 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     new string[] { }),
                     stopToken.Token);
             Thread.Sleep(TimeSpan.FromSeconds(10));
+            if (serverTask.IsFaulted)
+            {
+                throw serverTask.Exception;
+            }
             using (_driver)
             {
                 // Enable DevTools
@@ -247,6 +261,10 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     new string[] { }),
                     stopToken.Token);
             Thread.Sleep(TimeSpan.FromSeconds(10));
+            if (serverTask.IsFaulted)
+            {
+                throw serverTask.Exception;
+            }
             using (_driver)
             {
                 // Enable DevTools

@@ -39,11 +39,19 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
     {
         private const string STATIC_HTML_ENDPOINT = "/static.html";
         private const string TEST_PAGE_ENDPOINT = "/testpage.html";
+        private CancellationTokenSource _stopToken;
+
 
         [TestInitialize]
         public void Init()
         {
             base.InitializeChromeDriver();
+            // Arrange
+            _stopToken = new CancellationTokenSource();
+            var serverTask = Task.Run(() =>
+                Examples.OnPremise.GettingStartedWeb.Program.Main(
+                    new string[] { }),
+                    _stopToken.Token);
         }
 
         /// <summary>
@@ -69,13 +77,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         [DynamicData(nameof(UrlsData))]
         public void VerifyExample_GetHighEntropyValues_Populates_51D_Cookie(string url)
         {
-            // Arrange
-            var stopToken = new CancellationTokenSource();
-            var serverTask = Task.Run(() =>
-                Examples.OnPremise.GettingStartedWeb.Program.Main(
-                    new string[] { }),
-                    stopToken.Token);
-
             using (Driver)
             {
                 // Enable DevTools
@@ -103,19 +104,11 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 // Quit the driver
                 Driver.Quit();
             }
-            stopToken.Cancel(false);
         }
 
         [TestMethod]
         public void VerifyExample_GetHighEntropyValues_Contains_CORS_Response_Header()
         {
-            // Arrange
-            var stopToken = new CancellationTokenSource();
-            var serverTask = Task.Run(() =>
-                Examples.OnPremise.GettingStartedWeb.Program.Main(
-                    new string[] { }),
-                    stopToken.Token);
-
             using (Driver)
             {
                 // Enable DevTools
@@ -156,20 +149,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 // Quit the driver
                 Driver.Quit();
             }
-            stopToken.Cancel(false);
-
         }
 
         [DataTestMethod]
         [DynamicData(nameof(UrlsData))]
         public void VerifyExample_GetHighEntropyValues_Fod_Completes(string url)
         {
-            // Arrange
-            var stopToken = new CancellationTokenSource();
-            var serverTask = Task.Run(() =>
-                Examples.OnPremise.GettingStartedWeb.Program.Main(
-                    new string[] { }),
-                    stopToken.Token);
             using (Driver)
             {
                 // Enable DevTools
@@ -193,7 +178,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 // Quit the _driver
                 Driver.Quit();
             }
-            stopToken.Cancel(false);
         }
     }
 

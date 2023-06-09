@@ -123,6 +123,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 if (response != null) { response.Dispose(); }
             }
             stopToken.Cancel(false);
+            await serverTask;
 
         }
 
@@ -191,6 +192,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 _driver.Quit();
             }
             stopToken.Cancel(false);
+            await serverTask;
 
         }
 
@@ -249,6 +251,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 _driver.Quit();
             }
             stopToken.Cancel(false);
+            await serverTask;
         }
         [DataTestMethod]
         [DynamicData(nameof(UrlsData))]
@@ -289,6 +292,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 _driver.Quit();
             }
             stopToken.Cancel(false);
+            await serverTask;
 
         }
        

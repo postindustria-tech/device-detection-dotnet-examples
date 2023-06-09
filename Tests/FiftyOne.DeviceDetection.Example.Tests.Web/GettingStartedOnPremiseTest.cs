@@ -41,6 +41,9 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using static System.Net.WebRequestMethods;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager.Helpers;
 
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
@@ -55,12 +58,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         [TestInitialize]
         public void Init()
         {
+            new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
             var chromeOptions = new ChromeOptions();
             chromeOptions.AcceptInsecureCertificates = true;
             // run in headless mode.
             chromeOptions.AddArgument("--headless=new");
             try
             {
+            
                 _driver = new ChromeDriver(chromeOptions);
             }
             catch (WebDriverException)
@@ -91,6 +96,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 Examples.OnPremise.GettingStartedWeb.Program.Main(
                     new string[] { }), 
                     stopToken.Token);
+                    
+            Thread.Sleep(TimeSpan.FromSeconds(5));
 
             using (var http = new HttpClient())
             {

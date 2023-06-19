@@ -31,6 +31,8 @@ using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
 {
@@ -38,8 +40,26 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
     {
         public static void Main(string[] args)
         {
+            // Start the server and then wait for the task to finish.
+            Run(args).Wait();
+        }
+
+        /// <summary>
+        /// Used by unit tests to run the example in an almost identical manner
+        /// to a developer using the example. Returns the task that the web 
+        /// server is running in so that the test can trigger the cancellation
+        /// token and then wait for the server to shutdown before finishing.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="stopToken"></param>
+        /// <returns></returns>
+        public static Task Run(
+            string[] args, 
+            CancellationToken stopToken = default)
+        {
             var configOverrides = CreateConfigOverrides();
-            CreateHostBuilder(configOverrides, args).Build().Run();
+            return CreateHostBuilder(configOverrides, args).Build().RunAsync(
+                stopToken);
         }
 
         public static IHostBuilder CreateHostBuilder(

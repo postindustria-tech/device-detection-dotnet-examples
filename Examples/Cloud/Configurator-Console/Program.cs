@@ -21,7 +21,6 @@
  * ********************************************************************* */
 
 using FiftyOne.Pipeline.Core.FlowElements;
-using FiftyOne.Pipeline.Engines.Data;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -146,7 +145,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.Configurator
                     {
                         serviceProvider.GetRequiredService<ILogger<Program>>().LogError(
                             $"No resource key specified on the command line or the environment " +
-                            $"variable '{ExampleUtils.RESOURCE_KEY_ENV_VAR}'. The 51Degrees " +
+                            $"variable '{ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR}'. The 51Degrees " +
                             $"cloud service is accessed using a 'ResourceKey'. For more " +
                             $"information see " +
                             $"https://51degrees.com/documentation/_info__resource_keys.html. " +
@@ -171,7 +170,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.Configurator
             // Otherwise, get it from the environment variable.
             string resourceKey = args.Length > 0 ? args[0] :
                 Environment.GetEnvironmentVariable(
-                    ExampleUtils.RESOURCE_KEY_ENV_VAR);
+                    ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR);
 
             Example.Run(resourceKey, Console.Out);
         }

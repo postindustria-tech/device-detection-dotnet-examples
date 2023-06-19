@@ -22,12 +22,16 @@
 
 using FiftyOne.Pipeline.CloudRequestEngine.FlowElements;
 using FiftyOne.Pipeline.Core.Configuration;
+using FiftyOne.Pipeline.Web.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
 {
@@ -35,9 +39,26 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
     {
         public static void Main(string[] args)
         {
-            // Get any configuration overrides we need.
-            var overrides = CreateConfigOverrides();
-            CreateHostBuilder(overrides, args).Build().Run();
+            // Start the server and then wait for the task to finish.
+            Run(args).Wait();
+        }
+
+        /// <summary>
+        /// Used by unit tests to run the example in an almost identical manner
+        /// to a developer using the example. Returns the task that the web 
+        /// server is running in so that the test can trigger the cancellation
+        /// token and then wait for the server to shutdown before finishing.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="stopToken"></param>
+        /// <returns></returns>
+        public static Task Run(
+            string[] args,
+            CancellationToken stopToken = default)
+        {
+            var configOverrides = CreateConfigOverrides();
+            return CreateHostBuilder(configOverrides, args).Build().RunAsync(
+                stopToken);
         }
 
         public static IHostBuilder CreateHostBuilder(
@@ -55,7 +76,13 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                         builder.AddJsonFile("appsettings.json")
                             .AddInMemoryCollection(overrides);
                     })
-                    .UseStartup<Startup>();
+                    .UseKestrel(options =>
+                    {
+                        Constants.LOCALHOST_HTTP_PORTS.ForEach(port => options.ListenAnyIP(port));
+                        Constants.LOCALHOST_HTTPS_PORTS.ForEach(port => options.ListenAnyIP(port, config => config.UseHttps()));
+                    })
+                    .UseStartup<Startup>()
+                    .UseStaticWebAssets();
                 });
 
         /// <summary>
@@ -72,7 +99,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            PipelineOptions options = new PipelineOptions();
+            PipelineOptions options = new PipelineWebIntegrationOptions();
             var section = config.GetRequiredSection("PipelineOptions");
             // Use the 'ErrorOnUnknownConfiguration' option to warn us if we've got any
             // misnamed configuration keys.
@@ -93,7 +120,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                     $":BuildParameters:ResourceKey";
 
                 string resourceKey = Environment.GetEnvironmentVariable(
-                        ExampleUtils.RESOURCE_KEY_ENV_VAR);
+                        ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR);
 
                 if (string.IsNullOrEmpty(resourceKey) == false)
                 {
@@ -103,7 +130,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                 {
                     throw new Exception($"No resource key specified in the configuration file " +
                         $"'appsettings.json' or the environment variable " +
-                        $"'{ExampleUtils.RESOURCE_KEY_ENV_VAR}'. The 51Degrees cloud " +
+                        $"'{ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR}'. The 51Degrees cloud " +
                         $"service is accessed using a 'ResourceKey'. For more information " +
                         $"see https://51degrees.com/documentation/_info__resource_keys.html. " +
                         $"A resource key with the properties required by this example can be " +

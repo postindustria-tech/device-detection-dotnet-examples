@@ -145,7 +145,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.TacLookup
                     {
                         serviceProvider.GetRequiredService<ILogger<Program>>().LogError(
                             $"No resource key specified on the command line or in " +
-                            $"the environment variable '{ExampleUtils.RESOURCE_KEY_ENV_VAR}'. " +
+                            $"the environment variable '{ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR}'. " +
                             $"The 51Degrees cloud service is accessed using a 'ResourceKey'. " +
                             $"For more information see " +
                             $"https://51degrees.com/documentation/_info__resource_keys.html. " +
@@ -172,7 +172,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.TacLookup
             // Otherwise, get it from the environment variable.
             string resourceKey = args.Length > 0 ? args[0] :
                 Environment.GetEnvironmentVariable(
-                    ExampleUtils.RESOURCE_KEY_ENV_VAR);
+                    ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR);
 
             // Load the configuration file
             var config = new ConfigurationBuilder()

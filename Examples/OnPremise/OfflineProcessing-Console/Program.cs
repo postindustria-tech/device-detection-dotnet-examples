@@ -25,9 +25,6 @@ using FiftyOne.Pipeline.Engines;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using YamlDotNet.Core;
-using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
 /// <summary>

@@ -20,12 +20,12 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
+using FiftyOne.DeviceDetection.Examples;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
@@ -44,7 +44,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             if (_gotEnvVars == false)
             {
                 // Get resource keys from environment variables.
-                // These must be configured with at least the following properties:
+                // These must be configured with at least the following
+                // properties:
                 // HardwareVendor,HardwareName,DeviceType,PlatformVendor,
                 // PlatformName,PlatformVersion,BrowserVendor,BrowserName,
                 // BrowserVersion
@@ -56,7 +57,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 // ACCEPTCH_HARDWARE_KEY - SetHeaderHardwareAccept-CH only
                 // ACCEPTCH_PLATFORM_KEY - SetHeaderPlatformAccept-CH only
                 // ACCEPTCH_NONE_KEY - No *Accept-CH properties.
-                GetKeyFromEnv("SUPER_RESOURCE_KEY", v => SUPER_KEY = v);
+                GetKeyFromEnv(
+                    ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR, 
+                    v => SUPER_KEY = v);
                 GetKeyFromEnv("ACCEPTCH_BROWSER_KEY", v => BROWSER_KEY = v);
                 GetKeyFromEnv("ACCEPTCH_HARDWARE_KEY", v => HARDWARE_KEY = v);
                 GetKeyFromEnv("ACCEPTCH_PLATFORM_KEY", v => PLATFORM_KEY = v);
@@ -132,6 +135,5 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 }
             }
         }
-
     }
 }

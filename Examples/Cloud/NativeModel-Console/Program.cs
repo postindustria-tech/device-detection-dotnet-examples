@@ -140,7 +140,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.NativeModelLookup
             // Otherwise, get it from the environment variable.
             string resourceKey = args.Length > 0 ? args[0] :
                 Environment.GetEnvironmentVariable(
-                    ExampleUtils.RESOURCE_KEY_ENV_VAR);
+                    ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR);
 
             // Configure a logger to output to the console.
             var loggerFactory = LoggerFactory.Create(b => b.AddConsole());
@@ -149,7 +149,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.NativeModelLookup
             if (string.IsNullOrEmpty(resourceKey))
             {
                 logger.LogError($"No resource key specified on the command line or in the " +
-                    $"environment variable '{ExampleUtils.RESOURCE_KEY_ENV_VAR}'. " +
+                    $"environment variable '{ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR}'. " +
                     $"The 51Degrees cloud service is accessed using a 'ResourceKey'. " +
                     $"For more information " +
                     $"see https://51degrees.com/documentation/_info__resource_keys.html. " +

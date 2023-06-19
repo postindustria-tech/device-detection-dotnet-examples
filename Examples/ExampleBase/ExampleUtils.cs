@@ -35,10 +35,17 @@ namespace FiftyOne.DeviceDetection.Examples
     public static class ExampleUtils
     {
         /// <summary>
-        /// The default environment variable used to get the resource key to use when running 
-        /// examples.
+        /// The default environment variable key used to get the resource key 
+        /// to use when running cloud examples.
         /// </summary>
-        public const string RESOURCE_KEY_ENV_VAR = "51D_RESOURCE_KEY";
+        public const string CLOUD_RESOURCE_KEY_ENV_VAR = "SUPER_RESOURCE_KEY";
+
+        /// <summary>
+        /// The default environment variable key used to get the end point URL
+        /// to use when running cloud examples. Can be used to override the
+        /// appsettings.json configuration for testing custom end points.
+        /// </summary>
+        public const string CLOUD_END_POINT_ENV_VAR = "51D_CLOUD_ENDPOINT";
 
         /// <summary>
         /// Timeout used when searching for files.
@@ -58,13 +65,17 @@ namespace FiftyOne.DeviceDetection.Examples
         /// This continues until the file is found or a timeout is triggered.
         /// </summary>
         /// <param name="filename"></param>
+        /// <param name="dir">
+        /// The directory to start looking from. If not provided the current directory is used.
+        /// </param>
         /// <returns></returns>
         public static string FindFile(
-            string filename)
+            string filename,
+            DirectoryInfo dir = null)
         {
             var cancel = new CancellationTokenSource();
             // Start the file system search as a separate task.
-            var searchTask = Task.Run(() => FindFile(filename, cancel.Token));
+            var searchTask = Task.Run(() => FindFile(filename, dir, cancel.Token));
             // Wait for either the search or a timeout task to complete.
             Task.WaitAny(searchTask, Task.Delay(FindFileTimeoutMs));
             cancel.Cancel();
@@ -74,8 +85,8 @@ namespace FiftyOne.DeviceDetection.Examples
 
         private static string FindFile(
             string filename,
-            CancellationToken cancel,
-            DirectoryInfo dir = null)
+            DirectoryInfo dir,
+            CancellationToken cancel)
         {
             if (dir == null)
             {
@@ -86,12 +97,11 @@ namespace FiftyOne.DeviceDetection.Examples
             try
             {
                 var files = dir.GetFiles(filename, SearchOption.AllDirectories);
-
                 if (files.Length == 0 &&
                     dir.Parent != null &&
                     cancel.IsCancellationRequested == false)
                 {
-                    result = FindFile(filename, cancel, dir.Parent);
+                    result = FindFile(filename, dir.Parent, cancel);
                 }
                 else if (files.Length > 0)
                 {

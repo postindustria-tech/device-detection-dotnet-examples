@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,7 +65,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
 {
     public class Program
     {
-        private class BenchmarkResult
+        public class BenchmarkResult
         {
             public long Count { get; set; }
             public Stopwatch Timer { get; } = new Stopwatch();
@@ -82,6 +83,14 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
 
         private const ushort DEFAULT_THREAD_COUNT = 4;
 
+        private static float GetMsPerDetection(IList<BenchmarkResult> results)
+        {
+            var detections = results.Sum(r => r.Count);
+            var milliseconds = results.Sum(r => r.Timer.ElapsedMilliseconds);
+            // Calculate approx. real-time ms per detection. 
+            return (float)(milliseconds) / detections;
+        }
+
         public class Example : ExampleBase
         {
             private IPipeline _pipeline;
@@ -91,7 +100,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
                 _pipeline = pipeline;
             }
 
-            private void Run(
+            private List<BenchmarkResult> Run(
                 TextReader evidenceReader,
                 TextWriter output,
                 int threadCount)
@@ -112,6 +121,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
                     $"adjustment from warm-up {executionTime - warmupTime} ms");
 
                 Report(execution, threadCount, output);
+                return execution;
             }
 
             /// <summary>
@@ -124,12 +134,10 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
                 int threadCount,
                 TextWriter output)
             {
-                var detections = results.Sum(r => r.Count);
-                var milliseconds = results.Sum(r => r.Timer.ElapsedMilliseconds);
                 // Calculate approx. real-time ms per detection. 
-                var msPerDetection = (float)(milliseconds / threadCount) / detections;
+                var msPerDetection = GetMsPerDetection(results) / threadCount;
                 var detectionsPerSecond = 1000 / msPerDetection;
-                output.WriteLine($"Overall: {detections} detections, Average millisecs per " +
+                output.WriteLine($"Overall: {results.Sum(i => i.Count)} detections, Average millisecs per " +
                     $"detection: {msPerDetection}, Detections per second: {detectionsPerSecond}");
                 output.WriteLine($"Overall: Concurrent threads: {threadCount}");
             }
@@ -209,7 +217,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
             /// service provider setup logic.
             /// </summary>
             /// <param name="options"></param>
-            public static void Run(string dataFile, string evidenceFile, 
+            public static List<BenchmarkResult> Run(string dataFile, string evidenceFile, 
                 PerformanceConfiguration config, TextWriter output, ushort threadCount)
             {
                 // Initialize a service collection which will be used to create the services
@@ -287,6 +295,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
                             "Failed to find a device detection data file. Make sure the " +
                             "device-detection-data submodule has been updated by running " +
                             "`git submodule update --recursive`.");
+                        return null;
                     }
                     else
                     {
@@ -300,7 +309,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
                             $"PerformanceGraph {config.PerformanceGraph}, " +
                             $"PredictiveGraph {config.PredictiveGraph}");
 
-                        serviceProvider.GetRequiredService<Example>().Run(evidenceReader, output, threadCount);
+                        return serviceProvider.GetRequiredService<Example>().Run(evidenceReader, output, threadCount);
                     }
                 }
             }
@@ -310,23 +319,44 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
         {
             // Use the supplied path for the data file or find the lite file that is included
             // in the repository.
-            var dataFile = args.Length > 0 ? args[0] :
-                // In this example, by default, the 51degrees "Lite" file needs to be somewhere in the
-                // project space, or you may specify another file as a command line parameter.
-                //
-                // Note that the Lite data file is only used for illustration, and has limited accuracy
-                // and capabilities. Find out about the Enterprise data file on our pricing page:
-                // https://51degrees.com/pricing
-                ExampleUtils.FindFile(Constants.LITE_HASH_DATA_FILE_NAME);
-            // Do the same for the yaml evidence file.
-            var evidenceFile = args.Length > 1 ? args[1] :
-                // This file contains the 20,000 most commonly seen combinations of header values 
-                // that are relevant to device detection. For example, User-Agent and UA-CH headers.
-                ExampleUtils.FindFile(Constants.YAML_EVIDENCE_FILE_NAME);
+            var options = ExampleUtils.ParseOptions(args);
+            if (options != null) {
+                var dataFile = options.DataFilePath != null ? options.DataFilePath :
+                    // In this example, by default, the 51degrees "Lite" file needs to be somewhere in the
+                    // project space, or you may specify another file as a command line parameter.
+                    //
+                    // Note that the Lite data file is only used for illustration, and has limited accuracy
+                    // and capabilities. Find out about the Enterprise data file on our pricing page:
+                    // https://51degrees.com/pricing
+                    ExampleUtils.FindFile(Constants.LITE_HASH_DATA_FILE_NAME);
+                // Do the same for the yaml evidence file.
+                var evidenceFile = options.EvidenceFile != null ? options.EvidenceFile :
+                    // This file contains the 20,000 most commonly seen combinations of header values 
+                    // that are relevant to device detection. For example, User-Agent and UA-CH headers.
+                    ExampleUtils.FindFile(Constants.YAML_EVIDENCE_FILE_NAME);
 
-            foreach (var config in _configs)
-            {
-                Example.Run(dataFile, evidenceFile, config, Console.Out, DEFAULT_THREAD_COUNT);
+                var results = new Dictionary<PerformanceConfiguration, IList<BenchmarkResult>>();
+                foreach (var config in _configs)
+                {
+                    var result = Example.Run(dataFile, evidenceFile, config, Console.Out, DEFAULT_THREAD_COUNT);
+                    results[config] = result;
+                }
+
+                if (string.IsNullOrEmpty(options.JsonOutput) == false)
+                {
+                    using (var jsonOutput = File.CreateText(options.JsonOutput))
+                    {
+                        var jsonResults = results.ToDictionary(
+                            k => $"{Enum.GetName(k.Key.Profile)}{(k.Key.AllProperties ? "_All" : "")}",
+                            v => new Dictionary<string, float>()
+                            {
+                            {"DetectionsPerSecond", 1000 / GetMsPerDetection(v.Value) },
+                            {"DetectionsPerSecondPerThread", 1000 / (GetMsPerDetection(v.Value) * DEFAULT_THREAD_COUNT) },
+                            {"MsPerDetection", GetMsPerDetection(v.Value) }
+                            });
+                        jsonOutput.Write(JsonSerializer.Serialize(jsonResults));
+                    }
+                }
             }
         }
 

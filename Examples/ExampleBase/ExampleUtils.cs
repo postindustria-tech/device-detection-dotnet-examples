@@ -26,6 +26,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,6 +57,90 @@ namespace FiftyOne.DeviceDetection.Examples
         /// If data file is older than this number of days then a warning will be displayed.
         /// </summary>
         public const int DataFileAgeWarning = 30;
+
+        private const string DATA_OPTION = "--data-file";
+        private const string DATA_OPTION_SHORT = "-d";
+        private const string UA_OPTION = "--user-agent-file";
+        private const string UA_OPTION_SHORT = "-u";
+        private const string JSON_OPTION = "--json-output";
+        private const string JSON_OPTION_SHORT = "-j";
+        private const string HELP_OPTION = "--51help";
+        private const string HELP_OPTION_SHORT = "-51h";
+
+        private static string OptionMessage(string message, string option, string shortOption)
+        {
+            var padding = 32 - option.Length - shortOption.Length;
+            return $"  {option}, {shortOption}{new string(' ', padding)}: {message}";
+        }
+
+        /// <summary>
+        /// Print the available options to the output.
+        /// </summary>
+        private static void PrintHelp()
+        {
+            Console.WriteLine("Available options are:");
+            Console.WriteLine(OptionMessage("Path to a 51Degrees Hash data file", DATA_OPTION, DATA_OPTION_SHORT));
+            Console.WriteLine(OptionMessage("Path to a User-Agents YAML file", UA_OPTION, UA_OPTION_SHORT));
+            Console.WriteLine(OptionMessage("Path to a file to output JSON format results to", JSON_OPTION, JSON_OPTION_SHORT));
+            Console.WriteLine(OptionMessage("Print this help", HELP_OPTION, HELP_OPTION_SHORT));
+        }
+
+
+        /// <summary>
+        /// Parse the command line arguments passed to the example to get the common
+        /// options.
+        /// </summary>
+        /// <param name="args">
+        /// Command line options.
+        /// </param>
+        /// <returns>
+        /// Parsed options, or null if help output is requested.
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// If an invalid argument is passed.
+        /// </exception>
+        public static ExampleOptions ParseOptions(string[] args)
+        {
+            var options = new ExampleOptions();
+            for (int i = 0; i < args.Length; i++)
+            {
+                if (args[i].StartsWith("-"))
+                {
+                    switch (args[i])
+                    {
+                        case DATA_OPTION:
+                        case DATA_OPTION_SHORT:
+                            // Set data file path
+                            options.DataFilePath = args[i + 1];
+                            break;
+                        case UA_OPTION:
+                        case UA_OPTION_SHORT:
+                            // Set data file path
+                            options.EvidenceFile = args[i + 1];
+                            break;
+                        case JSON_OPTION:
+                        case JSON_OPTION_SHORT:
+                            // Set data file path
+                            options.JsonOutput = args[i + 1];
+                            break;
+                        case HELP_OPTION:
+                        case HELP_OPTION_SHORT:
+                            // Set data file path
+                            PrintHelp();
+                            return null;
+                        default:
+                            throw new ArgumentException(
+                                $"The option '{args[i]}' is not recognized. " +
+                                $"Use {HELP_OPTION} ({HELP_OPTION_SHORT}) to list options");
+                    }
+                }
+                else
+                {
+                    // Do nothing, this is a value.
+                }
+            }
+            return options;
+        }
 
         /// <summary>
         /// Uses a background task to search for the specified filename within the working 

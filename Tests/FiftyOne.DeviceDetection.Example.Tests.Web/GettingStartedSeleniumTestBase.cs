@@ -26,6 +26,8 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
@@ -34,12 +36,17 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         private const string STATIC_HTML_ENDPOINT = "/static.html";
         private const string TEST_PAGE_ENDPOINT = "/testpage.html";
 
+        public GettingStartedSeleniumTestBase(
+            Func<CancellationToken, Task> startServer) : base(startServer)
+        {
+        }
+
         /// <summary>
         /// Verifies that the 51d cookie is populated.
         /// </summary>
         /// <param name="url"></param>
         [DataTestMethod]
-        [DynamicData(nameof(HttpsUrlsData), typeof(WebServerTestBase))]
+        [DynamicData(nameof(Parameters.HttpsUrlsData), typeof(Parameters))]
         public void VerifyExample_GetHighEntropyValues_Populates_51D_Cookie(string url)
         {
             if (Network == null)
@@ -52,8 +59,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             Driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
 
             // Wait for the page to load
-            new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver => 
-                true);
+            new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver => true);
 
             var cookies = Network.GetAllCookies().Result;
             var fod_cookie = cookies.Cookies.Where(c => 
@@ -62,11 +68,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 
             // Assert
             Assert.IsNotNull(fod_cookie);
-            Assert.IsTrue(Convert.TryFromBase64String(fod_cookie.Value, bytes, out int _));
+            Assert.IsTrue(Convert.TryFromBase64String(
+                fod_cookie.Value, 
+                bytes, 
+                out int _));
         }
 
         [DataTestMethod]
-        [DynamicData(nameof(HttpsUrlsData), typeof(WebServerTestBase))]
+        [DynamicData(nameof(Parameters.HttpsUrlsData), typeof(Parameters))]
         public void VerifyExample_GetHighEntropyValues_Contains_CORS_Response_Header(string url)
         {
             const string KEY = "access-control-allow-origin";
@@ -110,7 +119,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         }
 
         [DataTestMethod]
-        [DynamicData(nameof(HttpsUrlsData), typeof(WebServerTestBase))]
+        [DynamicData(nameof(Parameters.HttpsUrlsData), typeof(Parameters))]
         public void VerifyExample_GetHighEntropyValues_Fod_Completes(string url)
         {
             // Act

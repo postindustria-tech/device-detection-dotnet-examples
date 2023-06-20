@@ -20,25 +20,30 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.DevTools;
 using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Firefox;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 using DevToolsSessionDomains = OpenQA.Selenium.DevTools.DevToolsSessionDomains;
-using OpenQA.Selenium.Firefox;
-using System.Threading.Tasks;
-
 // Used to map new version features.
 using Enhanced = OpenQA.Selenium.DevTools.V114;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
-    public class SeleniumTestsBase : WebServerTestBase
+    public class SeleniumTestsBase
     {
         /// <summary>
         /// Number of seconds to wait for a response that might satisfy the 
@@ -68,15 +73,48 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             new Enhanced.Network.EnableCommandSettings();
 
         /// <summary>
+        /// Used to stop the server when the test is finished.
+        /// </summary>
+        private readonly CancellationTokenSource StopSource = 
+            new CancellationTokenSource();
+
+        /// <summary>
+        /// Function used to start the web server under test.
+        /// </summary>
+        private readonly Func<CancellationToken, Task> StartServerFunc;
+
+        /// <summary>
+        /// The task that is running the server.
+        /// </summary>
+        private Task ServerTask { get; set; }
+
+
+        public SeleniumTestsBase(Func<CancellationToken, Task> startServer)
+        {
+            StartServerFunc = startServer;
+        }
+
+        [TestInitialize]
+        public void TestServerInitialize()
+        {
+            ServerTask = StartServerFunc(StopSource.Token);
+        }
+
+        /// <summary>
         /// Cleans up after the test.
         /// </summary>
         [TestCleanup]
-        public void CleanupDriver()
+        public void TestCleanup()
         {
             if (Driver != null)
             {
                 Driver.Quit();
                 Driver.Dispose();
+            }
+            if (ServerTask != null)
+            {
+                StopSource.Cancel(true);
+                ServerTask.Wait();
             }
         }
 

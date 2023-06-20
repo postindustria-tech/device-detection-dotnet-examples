@@ -20,43 +20,18 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
+using FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.ClientOnly;
 
-namespace FiftyOne.DeviceDetection.Example.Tests.Web
+namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud.ClientOnly
 {
-    public class GettingStartedTestBase<T> : WebApplicationFactory<T>
-        where T : class
+    public class GettingStartedSeleniumTest : GettingStartedSeleniumTestBase
     {
         /// <summary>
-        /// Test that the running server is able to run and returns code 200 
-        /// upon http(s) request.
+        /// Starts the Program with the cancellation token provided.
         /// </summary>
-        /// <returns></returns>
-        [TestMethod]
-        [DynamicData(nameof(Parameters.AllUrlsData),typeof(Parameters))]
-        public async Task VerifyExample_Returns_Status_Code_200(string url)
+        public GettingStartedSeleniumTest()
+            : base((t) => Program.Run(new string[] { }, t))
         {
-            // Setup
-            using (var http = CreateClient())
-            using (var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(url),
-            })
-            { 
-                request.Headers.Add("User-Agent", "abc");
-
-                // Act
-                var response = await http.SendAsync(request);
-
-                // Assert
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            }
         }
     }
 }

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.ClientOnly</RootNamespace>
+    <AssemblyName>FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.ClientOnly</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUglify" Version="1.20.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ExampleBase\FiftyOne.DeviceDetection.Examples.csproj" />
+  </ItemGroup>
+
+</Project>

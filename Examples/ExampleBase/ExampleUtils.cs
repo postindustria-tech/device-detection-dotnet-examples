@@ -290,5 +290,27 @@ namespace FiftyOne.DeviceDetection.Examples
                 { "header.sec-ch-ua-platform-version", "\"14.0.0\"" }
             }
         };
+
+        /// <summary>
+        /// Checks if an environment variable exists with the key name provided
+        /// and then runs the action with the value, or an empty string if the
+        /// key does not exist.
+        /// </summary>
+        /// <param name="envVarName"></param>
+        /// <param name="setValue"></param>
+        public static void GetKeyFromEnv(
+            string envVarName,
+            Action<string> setValue)
+        {
+            var superKey = Environment.GetEnvironmentVariable(envVarName);
+            if (string.IsNullOrWhiteSpace(superKey) == false)
+            {
+                setValue(superKey);
+            }
+            else
+            {
+                setValue(string.Empty);
+            }
+        }
     }
 }

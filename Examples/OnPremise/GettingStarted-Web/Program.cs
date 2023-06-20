@@ -26,13 +26,11 @@ using FiftyOne.Pipeline.Web.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using NUglify.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
 {
@@ -54,7 +52,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
         /// <param name="stopToken"></param>
         /// <returns></returns>
         public static Task Run(
-            string[] args, 
+            string[] args,
             CancellationToken stopToken = default)
         {
             var configOverrides = CreateConfigOverrides();
@@ -65,22 +63,14 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
         public static IHostBuilder CreateHostBuilder(
             IDictionary<string, string> overrides, string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+                .ConfigureWebHostDefaults(builder =>
                 {
-                    webBuilder.ConfigureLogging(l =>
+                    builder.ConfigureAppConfiguration(config =>
                     {
-                        l.ClearProviders().AddConsole();
-                    })
-                    .ConfigureAppConfiguration(c =>
-                    {
-                        c.AddJsonFile("appsettings.json")
+                        config.AddJsonFile("appsettings.json")
                             .AddInMemoryCollection(overrides);
                     })
-                    .UseKestrel(options =>
-                    {
-                        Constants.LOCALHOST_HTTP_PORTS.ForEach(port => options.ListenAnyIP(port));
-                        Constants.LOCALHOST_HTTPS_PORTS.ForEach(port => options.ListenAnyIP(port, config => config.UseHttps()));
-                    })
+                    .UseUrls(Constants.AllUrls)
                     .UseStartup<Startup>()
                     .UseStaticWebAssets();
                 });

@@ -20,43 +20,13 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using Microsoft.AspNetCore.Mvc.Testing;
+using FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 
-namespace FiftyOne.DeviceDetection.Example.Tests.Web
+namespace FiftyOne.DeviceDetection.Example.Tests.Web.OnPremise
 {
-    public class GettingStartedTestBase<T> : WebApplicationFactory<T>
-        where T : class
+    [TestClass]
+    public class GettingStartedTest : GettingStartedTestBase<Program>
     {
-        /// <summary>
-        /// Test that the running server is able to run and returns code 200 
-        /// upon http(s) request.
-        /// </summary>
-        /// <returns></returns>
-        [TestMethod]
-        [DynamicData(nameof(Parameters.AllUrlsData),typeof(Parameters))]
-        public async Task VerifyExample_Returns_Status_Code_200(string url)
-        {
-            // Setup
-            using (var http = CreateClient())
-            using (var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(url),
-            })
-            { 
-                request.Headers.Add("User-Agent", "abc");
-
-                // Act
-                var response = await http.SendAsync(request);
-
-                // Assert
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            }
-        }
     }
 }

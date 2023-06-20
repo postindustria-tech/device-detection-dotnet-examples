@@ -1,4 +1,6 @@
-﻿namespace FiftyOne.DeviceDetection.Examples
+﻿using System.Linq;
+
+namespace FiftyOne.DeviceDetection.Examples
 {
     public class Constants
     {
@@ -43,5 +45,14 @@
         /// </summary>
         public static readonly int[] LOCALHOST_HTTP_PORTS = new int[] { 5101 };
         public static readonly int[] LOCALHOST_HTTPS_PORTS = new int[] { 5001, 5002 };
+
+        /// <summary>
+        /// The URLs that the web server should listen on.
+        /// </summary>
+        public static string[] AllUrls =>
+            Constants.LOCALHOST_HTTP_PORTS.Select(i =>
+                $"http://localhost:{i}").Concat(
+                Constants.LOCALHOST_HTTPS_PORTS.Select(i =>
+                    $"https://localhost:{i}")).ToArray();
     }
 }

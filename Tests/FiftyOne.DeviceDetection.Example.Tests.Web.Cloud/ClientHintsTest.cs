@@ -54,8 +54,11 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            // Zero based index of the element in the array of the original
+            // appsettings file.
+            var elementIndex = 0;
             var requestEnginePrefix = $"PipelineOptions:Elements:" +
-                $"0:BuildParameters:";
+                $"{elementIndex}:BuildParameters:";
             var resourceKeyConfigKey = $"{requestEnginePrefix}ResourceKey";
             var endPointConfigKey = $"{requestEnginePrefix}EndPoint";
             var testConfigOverrides =

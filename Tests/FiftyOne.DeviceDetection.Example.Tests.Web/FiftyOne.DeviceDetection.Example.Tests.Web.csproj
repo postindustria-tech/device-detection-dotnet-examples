@@ -5,35 +5,29 @@
 
     <IsPackable>false</IsPackable>
 
-    <Configurations>Debug;Release;CoreDebug;CoreRelease</Configurations>
+    <Configurations>Debug;Release</Configurations>
 
     <Platforms>AnyCPU;x64;x86</Platforms>
+
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.18" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.24" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.16" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.16" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
     <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
-    <PackageReference Include="coverlet.collector" Version="1.3.0">
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Selenium.WebDriver" Version="4.10.0" />
+    <PackageReference Include="WebDriverManager" Version="2.16.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Examples\Cloud\GettingStarted-Web\GettingStarted-Web.csproj" />
-    <ProjectReference Include="..\..\Examples\Legacy Web\Cloud-UACH-manual\Cloud - Client-Hints Not Integrated.csproj" />
-    <ProjectReference Include="..\..\Examples\Legacy Web\Cloud-UACH\Cloud - Client-Hints.csproj" />
-    <ProjectReference Include="..\..\Examples\Legacy Web\UACH-manual\Client-Hints Not Integrated.csproj" />
-    <ProjectReference Include="..\..\Examples\Legacy Web\UACH\Client-Hints.csproj" />
-    <ProjectReference Include="..\..\Examples\OnPremise\GettingStarted-Web\GettingStarted-Web.csproj" />
+    <ProjectReference Include="..\..\Examples\ExampleBase\FiftyOne.DeviceDetection.Examples.csproj" />
   </ItemGroup>
 
-  <Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
-    <ItemGroup>
-      <DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
-    </ItemGroup>
-    <Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
-  </Target>
 </Project>

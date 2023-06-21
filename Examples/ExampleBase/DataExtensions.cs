@@ -25,7 +25,6 @@ using FiftyOne.Pipeline.Engines;
 using FiftyOne.Pipeline.Engines.Data;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FiftyOne.DeviceDetection.Examples
 {

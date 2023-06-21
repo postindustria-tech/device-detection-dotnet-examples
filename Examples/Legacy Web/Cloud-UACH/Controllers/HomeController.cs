@@ -20,11 +20,8 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using FiftyOne.Pipeline.Web.Services;
-using FiftyOne.DeviceDetection;
 
 namespace Cloud_Client_Hints_NetCore_31.Controllers
 {

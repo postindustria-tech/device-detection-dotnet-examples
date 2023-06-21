@@ -20,11 +20,6 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.Model
 {
     public class EvidenceModel

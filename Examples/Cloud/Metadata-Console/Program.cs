@@ -24,7 +24,6 @@ using FiftyOne.DeviceDetection.Cloud.FlowElements;
 using FiftyOne.Pipeline.CloudRequestEngine.FlowElements;
 using FiftyOne.Pipeline.Core.Data;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
 using System;
 using System.IO;
 
@@ -133,7 +132,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.Metadata
             // Otherwise, get it from the environment variable.
             string resourceKey = args.Length > 0 ? args[0] :
                 Environment.GetEnvironmentVariable(
-                    ExampleUtils.RESOURCE_KEY_ENV_VAR);
+                    ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR);
 
             // Configure a logger to output to the console.
             var loggerFactory = LoggerFactory.Create(b => b.AddConsole());
@@ -143,7 +142,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.Metadata
             {
                 logger.LogError($"No resource key specified in the configuration file " +
                     $"'appsettings.json' or the environment variable " +
-                    $"'{ExampleUtils.RESOURCE_KEY_ENV_VAR}'. The 51Degrees cloud service is " +
+                    $"'{ExampleUtils.CLOUD_RESOURCE_KEY_ENV_VAR}'. The 51Degrees cloud service is " +
                     $"accessed using a 'ResourceKey'. For more information see " +
                     $"https://51degrees.com/documentation/_info__resource_keys.html. " +
                     $"A resource key with the properties required by this example can be " +

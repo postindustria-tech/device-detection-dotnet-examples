@@ -20,8 +20,6 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using FiftyOne.DeviceDetection;
-using FiftyOne.DeviceDetection.Examples;
 using System;
 using System.Web.UI;
 
@@ -142,7 +140,7 @@ using System.Web.UI;
 /// @include Cloud/Framework-Web/Default.aspx
 namespace Framework_Web
 {
-    public partial class _Default : Page
+    public partial class Default : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

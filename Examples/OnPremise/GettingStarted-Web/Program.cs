@@ -20,17 +20,17 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using FiftyOne.DeviceDetection.Examples;
 using FiftyOne.DeviceDetection.Hash.Engine.OnPremise.FlowElements;
 using FiftyOne.Pipeline.Core.Configuration;
+using FiftyOne.Pipeline.Web.Shared;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
 {
@@ -38,25 +38,41 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
     {
         public static void Main(string[] args)
         {
+            // Start the server and then wait for the task to finish.
+            Run(args).Wait();
+        }
+
+        /// <summary>
+        /// Used by unit tests to run the example in an almost identical manner
+        /// to a developer using the example. Returns the task that the web 
+        /// server is running in so that the test can trigger the cancellation
+        /// token and then wait for the server to shutdown before finishing.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="stopToken"></param>
+        /// <returns></returns>
+        public static Task Run(
+            string[] args,
+            CancellationToken stopToken = default)
+        {
             var configOverrides = CreateConfigOverrides();
-            CreateHostBuilder(configOverrides, args).Build().Run();
+            return CreateHostBuilder(configOverrides, args).Build().RunAsync(
+                stopToken);
         }
 
         public static IHostBuilder CreateHostBuilder(
             IDictionary<string, string> overrides, string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+                .ConfigureWebHostDefaults(builder =>
                 {
-                    webBuilder.ConfigureLogging(l =>
+                    builder.ConfigureAppConfiguration(config =>
                     {
-                        l.ClearProviders().AddConsole();
-                    })
-                    .ConfigureAppConfiguration(c =>
-                    {
-                        c.AddJsonFile("appsettings.json")
+                        config.AddJsonFile("appsettings.json")
                             .AddInMemoryCollection(overrides);
                     })
-                    .UseStartup<Startup>();
+                    .UseUrls(Constants.AllUrls)
+                    .UseStartup<Startup>()
+                    .UseStaticWebAssets();
                 });
 
         /// <summary>
@@ -81,7 +97,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
                 .AddJsonFile("appsettings.json")
                 .Build();
             // Bind the configuration to a pipeline options instance
-            PipelineOptions options = new PipelineOptions();
+            PipelineOptions options = new PipelineWebIntegrationOptions();
             var section = config.GetRequiredSection("PipelineOptions");
             // Use the 'ErrorOnUnknownConfiguration' option to warn us if we've got any
             // misnamed configuration keys.

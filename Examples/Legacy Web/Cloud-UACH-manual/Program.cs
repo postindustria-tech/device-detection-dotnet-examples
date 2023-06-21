@@ -21,9 +21,7 @@
  * ********************************************************************* */
 
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System.Collections.Generic;
 
 namespace Cloud_Client_Hints_Not_Integrated
 {

@@ -20,11 +20,8 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using FiftyOne.Pipeline.Web.Services;
-using FiftyOne.DeviceDetection;
 using FiftyOne.Pipeline.Core.FlowElements;
 
 namespace Client_Hints_Not_Integrated

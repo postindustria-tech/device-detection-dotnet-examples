@@ -1,17 +1,23 @@
-﻿{  
+{  
   // For a sample configuration file demonstrating all available options, see 
   // https://github.com/51Degrees/device-detection-dotnet-examples/blob/main/Examples/sample-configuration.json
   "PipelineOptions": {
     "Elements": [
       {
-        "BuilderName": "DeviceDetectionHashEngineBuilder",
+        // Required to unpack the GetHighEntropyValues base 64 encoded string into UACH HTTP headers.
+        "BuilderName": "UachJsConversionElement"
+      },
+      {
+        "BuilderName": "DeviceDetectionHashEngine",
         "BuildParameters": {
-          "DataFile": "51Degrees-LiteV4.1.hash",
+          "DataFile": "D:\\Workspace\\device-detection-dotnet-examples\\device-detection-data\\51Degrees-LiteV4.1.hash",
           "CreateTempDataCopy": false,
           "AutoUpdate": false,
           "PerformanceProfile": "LowMemory",
           "DataFileSystemWatcher": false,
-          "DataUpdateOnStartUp": false
+          "DataUpdateOnStartUp": false,
+          // Explicitly include just the properties used by the example.
+          "Properties": "HardwareVendor,HardwareModel,HardwareName,IsMobile,JavascriptGetHighEntropyValues,Promise,Fetch,DeviceType,PlatformVendor,PlatformName,PlatformVersion,BrowserVendor,BrowserName,BrowserVersion,ScreenPixelsWidth,ScreenPixelsHeight,JavascriptScreenPixelsWidth,JavascriptScreenPixelsHeight"
         }
       },
       {
@@ -21,8 +27,14 @@
         }
       }
     ],
+    // Both these options default to true anyway.
+    // They are specified here for illustrative purposes.
+    "ClientSideEvidenceEnabled": true,
+    "UseAsyncScript": true,
     "BuildParameters": {
-      "ClientSideEnabled": true
+      "ClientSideEnabled": true,
+      "ClientSideEvidenceEnabled": true,
+      "UseAsyncScript": true
     }
   }
 }

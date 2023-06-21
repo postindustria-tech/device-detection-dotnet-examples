@@ -1,10 +1,4 @@
-﻿using FiftyOne.DeviceDetection.Cloud.FlowElements;
-using FiftyOne.Pipeline.CloudRequestEngine.FlowElements;
-using FiftyOne.Pipeline.Engines.FiftyOne.FlowElements;
-using FiftyOne.Pipeline.JavaScriptBuilder.FlowElement;
-using FiftyOne.Pipeline.JsonBuilder.FlowElement;
-using System;
-/* *********************************************************************
+﻿/* *********************************************************************
  * This Original Work is copyright of 51 Degrees Mobile Experts Limited.
  * Copyright 2022 51 Degrees Mobile Experts Limited, Davidson House,
  * Forbury Square, Reading, Berkshire, United Kingdom RG1 3EU.
@@ -26,13 +20,14 @@ using System;
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using System.Collections.Generic;
-using System.Linq;
+using FiftyOne.DeviceDetection.Cloud.FlowElements;
+using FiftyOne.Pipeline.CloudRequestEngine.FlowElements;
+using FiftyOne.Pipeline.Engines.FiftyOne.FlowElements;
+using FiftyOne.Pipeline.JavaScriptBuilder.FlowElement;
+using FiftyOne.Pipeline.JsonBuilder.FlowElement;
+using System;
 using System.Web;
-using System.Web.Optimization;
-using System.Web.Routing;
-using System.Web.Security;
-using System.Web.SessionState;
+using FiftyOne.DeviceDetection.Uach;
 
 namespace Framework_Web
 {
@@ -40,14 +35,11 @@ namespace Framework_Web
     {
         void Application_Start(object sender, EventArgs e)
         {
-            // Code that runs on application startup
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-			
             // Make sure the assemblies that are needed by the pipeline are loaded into the
             // app domain.
             // This is needed in order from BuildFromConfiguration to be able to find the
             // relevant builder types when using reflection.
+            AppDomain.CurrentDomain.Load(typeof(UachJsConversionElement).Assembly.GetName());
             AppDomain.CurrentDomain.Load(typeof(CloudRequestEngine).Assembly.GetName());
             AppDomain.CurrentDomain.Load(typeof(DeviceDetectionCloudEngine).Assembly.GetName());
             AppDomain.CurrentDomain.Load(typeof(JavaScriptBuilderElement).Assembly.GetName());

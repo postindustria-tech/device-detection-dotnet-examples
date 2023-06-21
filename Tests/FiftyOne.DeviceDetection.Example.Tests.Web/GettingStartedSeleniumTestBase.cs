@@ -92,7 +92,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             // Set to true when the JSON response is recieved.
             var jsonRecieved = false;
 
-            // Get Response Headers if the URL relates to '/51dpipeline/json'.
+            // Get Response Headers if the URL relates to a JSON response.
             Network.ResponseReceived += (sender, e) =>
             {
                 var headers = e.Response.Headers;

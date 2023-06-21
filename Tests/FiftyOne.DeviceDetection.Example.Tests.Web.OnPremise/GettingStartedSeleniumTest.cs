@@ -21,7 +21,6 @@
  * ********************************************************************* */
 
 using FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb;
-using System.Collections.Generic;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web.OnPremise
 {

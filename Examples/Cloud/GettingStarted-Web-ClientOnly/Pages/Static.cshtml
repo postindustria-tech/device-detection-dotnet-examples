@@ -9,6 +9,21 @@
 
 <script async src="@resourceUrl" type="text/javascript"></script>
 <script>
+
+    // Used to verify the cookie matches the result from
+    // getHighEntropyValues.
+    var ghe = null;
+    navigator.userAgentData
+        .getHighEntropyValues([
+            "brands",
+            "fullVersionList",
+            "mobile",
+            "model",
+            "platform",
+            "platformVersion"
+        ])
+        .then((v) => ghe = v);
+
     window.onload = function () {
         // Subscribe to the 'complete' event.
         fod.complete(function (data) {

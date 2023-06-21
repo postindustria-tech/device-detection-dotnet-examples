@@ -21,7 +21,6 @@
  * ********************************************************************* */
 
 using FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.ClientOnly;
-using System.Collections.Generic;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud.ClientOnly
 {

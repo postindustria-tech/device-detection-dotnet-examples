@@ -20,11 +20,6 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FiftyOne.DeviceDetection.Examples
+﻿namespace FiftyOne.DeviceDetection.Examples
 {
     public class ExampleOptions
     {

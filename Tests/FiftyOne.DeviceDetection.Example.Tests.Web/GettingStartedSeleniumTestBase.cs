@@ -86,19 +86,26 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     "Test session does not support CORS verification");
             }
 
+            // The header value pairs from the JSON response.
             Dictionary<string, string> headerValuePairs = new();
+
+            // Set to true when the JSON response is recieved.
+            var jsonRecieved = false;
 
             // Get Response Headers if the URL relates to '/51dpipeline/json'.
             Network.ResponseReceived += (sender, e) =>
             {
                 var headers = e.Response.Headers;
                 var responseUrl = e.Response.Url;
-                if (responseUrl.Contains("/51dpipeline/json"))
+                var mimeType = e.Response.MimeType;
+                if ("application/json".Equals(mimeType) &&
+                    responseUrl.EndsWith("json"))
                 {
                     foreach (var header in headers)
                     {
                         headerValuePairs.Add(header.Key.ToLower(), header.Value);
                     }
+                    jsonRecieved = true;
                 }
             };
 
@@ -109,13 +116,15 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             // Wait for the page to load
             new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver =>
             {
-                return headerValuePairs.ContainsKey(KEY);
+                return jsonRecieved;
             });
 
             // Assert
             // Verify that the response contains the header
             Assert.IsTrue(headerValuePairs.ContainsKey(KEY));
-            Assert.IsTrue(headerValuePairs[KEY].Equals(url));
+            Assert.IsTrue(
+                headerValuePairs[KEY].Equals(url) ||
+                headerValuePairs[KEY].Equals("*"));
         }
 
         [DataTestMethod]

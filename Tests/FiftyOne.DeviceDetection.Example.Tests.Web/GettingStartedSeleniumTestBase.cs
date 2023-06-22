@@ -70,6 +70,17 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             var js = (IJavaScriptExecutor)Driver;
             var ghe = (Dictionary<string, object>)js.ExecuteScript(
                 "return ghe");
+            foreach (var key in new[] {
+                "brands",
+                "fullVersionList",
+                "mobile",
+                "model",
+                "platform",
+                "platformVersion"})
+            {
+                Assert.IsTrue(ghe.ContainsKey(key));
+                Assert.IsNotNull(ghe[key]);
+            }
 
             var cookies = Network.GetAllCookies().Result;
             var fod_cookie = cookies.Cookies.Where(c =>

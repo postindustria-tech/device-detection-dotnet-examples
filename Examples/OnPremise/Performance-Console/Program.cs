@@ -83,12 +83,14 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
 
         private const ushort DEFAULT_THREAD_COUNT = 4;
 
-        private static float GetMsPerDetection(IList<BenchmarkResult> results)
+        private static float GetMsPerDetection(
+            IList<BenchmarkResult> results,
+            int threadCount)
         {
             var detections = results.Sum(r => r.Count);
             var milliseconds = results.Sum(r => r.Timer.ElapsedMilliseconds);
             // Calculate approx. real-time ms per detection. 
-            return (float)(milliseconds) / detections;
+            return (float)(milliseconds) / (detections * threadCount);
         }
 
         public class Example : ExampleBase
@@ -135,7 +137,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
                 TextWriter output)
             {
                 // Calculate approx. real-time ms per detection. 
-                var msPerDetection = GetMsPerDetection(results) / threadCount;
+                var msPerDetection = GetMsPerDetection(results, threadCount);
                 var detectionsPerSecond = 1000 / msPerDetection;
                 output.WriteLine($"Overall: {results.Sum(i => i.Count)} detections, Average millisecs per " +
                     $"detection: {msPerDetection}, Detections per second: {detectionsPerSecond}");
@@ -350,9 +352,9 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.Performance
                             k => $"{Enum.GetName(k.Key.Profile)}{(k.Key.AllProperties ? "_All" : "")}",
                             v => new Dictionary<string, float>()
                             {
-                            {"DetectionsPerSecond", 1000 / GetMsPerDetection(v.Value) },
-                            {"DetectionsPerSecondPerThread", 1000 / (GetMsPerDetection(v.Value) * DEFAULT_THREAD_COUNT) },
-                            {"MsPerDetection", GetMsPerDetection(v.Value) }
+                            {"DetectionsPerSecond", 1000 / GetMsPerDetection(v.Value, DEFAULT_THREAD_COUNT) },
+                            {"DetectionsPerSecondPerThread", 1000 / (GetMsPerDetection(v.Value, DEFAULT_THREAD_COUNT) * DEFAULT_THREAD_COUNT) },
+                            {"MsPerDetection", GetMsPerDetection(v.Value, DEFAULT_THREAD_COUNT) }
                             });
                         jsonOutput.Write(JsonSerializer.Serialize(jsonResults));
                     }

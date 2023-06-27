@@ -128,6 +128,7 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedConsole
                     OutputValue("Platform Version", device.PlatformVersion, message);
                     OutputValue("Browser Name", device.BrowserName, message);
                     OutputValue("Browser Version", device.BrowserVersion, message);
+                    OutputValue("DeviceId", device.DeviceId, message);
                     message.AppendLine("Matched");
                     foreach(var entry in device.UserAgents.Value)
                     {

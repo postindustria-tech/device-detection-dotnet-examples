@@ -26,7 +26,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FiftyOne.DeviceDetection.Example.Tests.Web.OnPremise
 {
     [TestClass]
-    public class GettingStartedTest : GettingStartedTestBase<Program>
+    public class GettingStartedTest : GettingStartedTestOverrides<Program>
     {
     }
 }

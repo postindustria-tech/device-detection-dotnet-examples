@@ -88,6 +88,7 @@
         <tr class="lightyellow"><td><b>Browser Version:</b></td><td> @Model.BrowserVersion</td></tr>
         <tr class="lightyellow"><td><b>Screen width (pixels):</b></td><td> @Model.ScreenWidth</td></tr>
         <tr class="lightyellow"><td><b>Screen height (pixels):</b></td><td> @Model.ScreenHeight</td></tr>
+        <tr class="lightyellow"><td><b>Device Id:</b></td><td> @Model.DeviceId</td></tr>
     </table>
     <br />
 
@@ -96,7 +97,7 @@
         <p class="smaller">Evidence was <span class="lightgreen">used</span> / <span class="lightyellow">present</span> for detection</p>
         <table>
             <tr>
-                <th>Key</th>
+                 <th>Key</th>
                 <th>Value</th>
             </tr>
             @foreach (var entry in Model.Evidence)

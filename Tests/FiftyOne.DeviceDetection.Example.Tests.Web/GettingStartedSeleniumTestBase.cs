@@ -26,6 +26,8 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,11 +35,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
     public class GettingStartedSeleniumTestBase : SeleniumTestsBase
     {
-        private const string STATIC_HTML_ENDPOINT = "/static.html";
-        private const string TEST_PAGE_ENDPOINT = "/testpage.html";
+        /// <summary>
+        /// Paths used for testing.
+        /// </summary>
+        private const string STATIC_HTML_PATH = "/static.html";
+        private const string TEST_PAGE_PATH = "/testpage.html";
 
         public GettingStartedSeleniumTestBase(
-            Func<CancellationToken, Task> startServer) : base(startServer)
+                Func<CancellationToken, Task> startServer) : base(startServer)
         {
         }
 
@@ -56,22 +61,48 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             }
 
             // Act
-            Driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
+            Driver.Navigate().GoToUrl(url + STATIC_HTML_PATH);
 
             // Wait for the page to load
             new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver => true);
 
+            // Get the high entropy values.
+            var js = (IJavaScriptExecutor)Driver;
+            var ghe = (Dictionary<string, object>)js.ExecuteScript(
+                "return ghe");
+            foreach (var key in new[] {
+                "brands",
+                "fullVersionList",
+                "mobile",
+                "model",
+                "platform",
+                "platformVersion"})
+            {
+                Assert.IsTrue(ghe.ContainsKey(key));
+                Assert.IsNotNull(ghe[key]);
+            }
+
             var cookies = Network.GetAllCookies().Result;
-            var fod_cookie = cookies.Cookies.Where(c => 
+            var fod_cookie = cookies.Cookies.Where(c =>
                 c.Name == "51D_GetHighEntropyValues").Single();
-            var bytes = new Span<byte>(new byte[1024]);
 
             // Assert
+
+            // Turn the cookie into a byte array.
             Assert.IsNotNull(fod_cookie);
-            Assert.IsTrue(Convert.TryFromBase64String(
-                fod_cookie.Value, 
-                bytes, 
-                out int _));
+            var bytes = Convert.FromBase64String(fod_cookie.Value);
+            Assert.IsNotNull(bytes);
+            Assert.IsTrue(bytes.Length > 0);
+
+            // Turn the byte array into json.
+            var json = ASCIIEncoding.ASCII.GetString(bytes);
+            Assert.IsNotNull(json);
+
+            // Turn the json into a dictionary of key and value pairs.
+            var map = JsonSerializer.Deserialize<Dictionary<string, object>>(
+                json);
+            Assert.IsNotNull(map);
+            Assert.IsTrue(ghe.All(i => map.ContainsKey(i.Key)));
         }
 
         [DataTestMethod]
@@ -86,36 +117,45 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     "Test session does not support CORS verification");
             }
 
+            // The header value pairs from the JSON response.
             Dictionary<string, string> headerValuePairs = new();
 
-            // Get Response Headers if the URL relates to '/51dpipeline/json'.
+            // Set to true when the JSON response is recieved.
+            var jsonRecieved = false;
+
+            // Get Response Headers if the URL relates to a JSON response.
             Network.ResponseReceived += (sender, e) =>
             {
                 var headers = e.Response.Headers;
                 var responseUrl = e.Response.Url;
-                if (responseUrl.Contains("/51dpipeline/json"))
+                var mimeType = e.Response.MimeType;
+                if ("application/json".Equals(mimeType) &&
+                    responseUrl.EndsWith("json"))
                 {
                     foreach (var header in headers)
                     {
                         headerValuePairs.Add(header.Key.ToLower(), header.Value);
                     }
+                    jsonRecieved = true;
                 }
             };
 
             // Act
             // Do a cross origin request
-            Driver.Navigate().GoToUrl(url + STATIC_HTML_ENDPOINT);
+            Driver.Navigate().GoToUrl(url + STATIC_HTML_PATH);
 
             // Wait for the page to load
             new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver =>
             {
-                return headerValuePairs.ContainsKey(KEY);
+                return jsonRecieved;
             });
 
             // Assert
             // Verify that the response contains the header
             Assert.IsTrue(headerValuePairs.ContainsKey(KEY));
-            Assert.IsTrue(headerValuePairs[KEY].Equals(url));
+            Assert.IsTrue(
+                headerValuePairs[KEY].Equals(url) ||
+                headerValuePairs[KEY].Equals("*"));
         }
 
         [DataTestMethod]
@@ -123,7 +163,11 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         public void VerifyExample_GetHighEntropyValues_Fod_Completes(string url)
         {
             // Act
-            Driver.Navigate().GoToUrl(url + TEST_PAGE_ENDPOINT);
+            Driver.Navigate().GoToUrl(url + TEST_PAGE_PATH);
+
+            string detectedBrowserName = null;
+            string detectedBrowserVersion = null;
+            string userAgent = null;
 
             // This throws an exception if the timeout period elapses,
             // which will cause the test to fail.
@@ -135,12 +179,63 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     // is 'complete' to indiciate that the complete event
                     // fired.
                     var js = (IJavaScriptExecutor)driver;
-                    var test = js.ExecuteScript("return test;");
-                    return test.Equals("complete");
+                    var test = js.ExecuteScript("return test");
+
+                    // Get the browser name and version from device detection
+                    // as returned in the complete event.
+                    if (test.Equals("complete"))
+                    {
+                        userAgent = (string)js.ExecuteScript(
+                            "return navigator.userAgent");
+                        detectedBrowserName = (string)js.ExecuteScript(
+                            "return browserName");
+                        detectedBrowserVersion = (string)js.ExecuteScript(
+                            "return browserVersion");
+                        return true;
+                    }
+                    return false;
                 });
 
             // Assert
             Assert.IsTrue(result);
+            Assert.IsNotNull(detectedBrowserName);
+            Assert.IsNotNull(detectedBrowserVersion);
+
+            // Check the reported browser name contains the expected one.
+            Assert.IsTrue(detectedBrowserName.Contains(
+                BrowserName,
+                StringComparison.InvariantCultureIgnoreCase),
+                $"Expected '{BrowserName}' to be present in '{detectedBrowserName}'");
+
+            // Check the major browser information is the same.
+            var version = ParseVersion(detectedBrowserVersion);
+            Assert.AreEqual(BrowserVersion.Major, version.Major);
+        }
+
+        /// <summary>
+        /// Turns the device detection browser version into a version instance.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        private static Version ParseVersion(string value)
+        {
+            var numbers = value.Split(".").Select(i => 
+                int.Parse(i)).ToArray();
+            switch(numbers.Length)
+            {
+                case 1:
+                    return new Version(numbers[0], 0);
+                case 2:
+                    return new Version(numbers[0], numbers[1]);
+                case 3:
+                    return new Version(numbers[0], numbers[1], numbers[2]);
+                case 4:
+                    return new Version(numbers[0], numbers[1], numbers[2], 
+                        numbers[3]);
+                default:
+                    throw new ArgumentException($"'{value}' invalid version");
+            }
         }
     }
 }

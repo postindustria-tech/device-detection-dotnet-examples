@@ -69,8 +69,11 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.OnPremise
                     "with the full path to the file.");
             }
 
+            // Zero based index of the element in the array of the original
+            // appsettings file.
+            var elementIndex = 0;
             var ddEngineParametersPrefix = $"PipelineOptions:Elements:" +
-                $"0:BuildParameters:";
+                $"{elementIndex}:BuildParameters:";
             var propertiesConfigKey = $"{ddEngineParametersPrefix}Properties";
             var dataFileConfigKey = $"{ddEngineParametersPrefix}DataFile";
             var testConfigOverrides =

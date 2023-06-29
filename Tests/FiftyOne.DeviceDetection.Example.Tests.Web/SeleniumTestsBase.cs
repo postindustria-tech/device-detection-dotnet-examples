@@ -20,11 +20,6 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -58,7 +53,17 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// <see cref="InitializeEdgeDriver"/>,
         /// <see cref="InitializeFirefoxDriver"/>.
         /// </summary>
-        protected IWebDriver Driver { get; private set; }
+        protected WebDriver Driver { get; private set; }
+
+        /// <summary>
+        /// Expected name of the browser reported by device detection.
+        /// </summary>
+        protected string BrowserName;
+
+        /// <summary>
+        /// Expected browser version reported by device detection.
+        /// </summary>
+        protected Version BrowserVersion;
 
         /// <summary>
         /// Network adapter if supported by the driver.
@@ -147,6 +152,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     "that the Chromium driver is installed");
             }
             Network = GetNetwork(Driver).Result;
+            BrowserName = "Chrome";
+            BrowserVersion = Version.Parse(
+                (string)Driver.Capabilities["browserVersion"]);
         }
 
         /// <summary>
@@ -159,12 +167,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 new EdgeConfig(), 
                 VersionResolveStrategy.Latest);
             Console.WriteLine("Driver: " + setupResult);
-            var firefoxOptions = new EdgeOptions();
-            firefoxOptions.AcceptInsecureCertificates = true;
-            firefoxOptions.AddArgument("--headless=new");
+            var edgeOptions = new EdgeOptions();
+            edgeOptions.AcceptInsecureCertificates = true;
+            edgeOptions.AddArgument("--headless=new");
             try
             {
-                Driver = new EdgeDriver(firefoxOptions);
+                Driver = new EdgeDriver(edgeOptions);
             }
             catch (WebDriverException)
             {
@@ -173,6 +181,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     "that the Edge driver is installed");
             }
             Network = GetNetwork(Driver).Result;
+            BrowserName = "Edge";
+            BrowserVersion = Version.Parse(
+                (string)Driver.Capabilities["browserVersion"]);
         }
 
         /// <summary>
@@ -200,6 +211,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     "that the Edge driver is installed");
             }
             Network = GetNetwork(Driver).Result;
+            BrowserName = "Firefox";
+            BrowserVersion = Version.Parse(
+                (string)Driver.Capabilities["browserVersion"]);
         }
 
         private static async Task<Enhanced.Network.NetworkAdapter> GetNetwork(

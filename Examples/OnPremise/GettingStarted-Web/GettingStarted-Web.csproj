@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb</AssemblyName>
     <RootNamespace>FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb</RootNamespace>
     <Platforms>AnyCPU;x64;x86</Platforms>
-    <Configurations>Debug;Release;LinuxRelease;LinuxDebug</Configurations>
+    <Configurations>Debug;Release;CoreRelease;CoreDebug</Configurations>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.29" />
+    <PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.31" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.24" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.18" />
   </ItemGroup>
 
   <ItemGroup>

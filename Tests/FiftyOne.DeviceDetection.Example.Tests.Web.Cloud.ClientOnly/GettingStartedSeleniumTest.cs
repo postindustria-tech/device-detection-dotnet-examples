@@ -29,8 +29,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud.ClientOnly
         /// <summary>
         /// Starts the Program with the cancellation token provided.
         /// </summary>
-        public GettingStartedSeleniumTest()
-            : base((t) => Program.Run(new string[] { }, t))
+        public GettingStartedSeleniumTest() : base(
+            (t) => Program.Run(new string[] { }, t))
         {
         }
     }

@@ -41,6 +41,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.Model
         public string BrowserVersion { get; private set; }
         public string ScreenWidth { get; private set; }
         public string ScreenHeight { get; private set; }
+        public string DeviceId { get; private set; }
 
         public IFlowData FlowData { get; private set; }
 
@@ -84,6 +85,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.Model
             BrowserVersion = deviceData.TryGetValue(d => d.BrowserVersion.GetHumanReadable());
             ScreenWidth = deviceData.TryGetValue(d => d.ScreenPixelsWidth.GetHumanReadable());
             ScreenHeight = deviceData.TryGetValue(d => d.ScreenPixelsHeight.GetHumanReadable());
+            DeviceId = deviceData.TryGetValue(d => d.DeviceId.GetHumanReadable());
         }
     }
 }

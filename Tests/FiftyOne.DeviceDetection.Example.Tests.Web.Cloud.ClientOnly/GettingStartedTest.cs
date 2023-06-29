@@ -20,18 +20,13 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb;
+using FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.ClientOnly;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud
+namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud.ClientOnly
 {
-    public class GettingStartedSeleniumTest : GettingStartedSeleniumTestBase
+    [TestClass]
+    public class GettingStartedTest : GettingStartedTestBase<Program>
     {
-        /// <summary>
-        /// Starts the Program with the cancellation token provided.
-        /// </summary>
-        public GettingStartedSeleniumTest() : base(
-            (t) => Program.Run(new string[] { }, t))
-        {
-        }
     }
 }

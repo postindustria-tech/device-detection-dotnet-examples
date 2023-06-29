@@ -15,6 +15,21 @@
     -->
     <script async src="https://localhost:5001/51Degrees.core.js" type="text/javascript"></script>
     <script>
+
+        // Used to verify the cookie matches the result from
+        // getHighEntropyValues.
+        var ghe = null;
+        navigator.userAgentData
+            .getHighEntropyValues([
+                "brands",
+                "fullVersionList",
+                "mobile",
+                "model",
+                "platform",
+                "platformVersion"
+            ])
+            .then((v) => ghe = v);
+
         window.onload = function () {
             // Subscribe to the 'complete' event.
             fod.complete(function (data) {

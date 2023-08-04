@@ -10,14 +10,14 @@
       {
         "BuilderName": "DeviceDetectionHashEngine",
         "BuildParameters": {
-          "DataFile": "D:\\Workspace\\device-detection-dotnet-examples\\device-detection-data\\51Degrees-LiteV4.1.hash",
+          "DataFile": "51Degrees-LiteV4.1.hash",
           "CreateTempDataCopy": false,
           "AutoUpdate": false,
           "PerformanceProfile": "LowMemory",
           "DataFileSystemWatcher": false,
           "DataUpdateOnStartUp": false,
           // Explicitly include just the properties used by the example.
-          "Properties": "HardwareVendor,HardwareModel,HardwareName,IsMobile,JavascriptGetHighEntropyValues,Promise,Fetch,DeviceType,PlatformVendor,PlatformName,PlatformVersion,BrowserVendor,BrowserName,BrowserVersion,ScreenPixelsWidth,ScreenPixelsHeight,JavascriptScreenPixelsWidth,JavascriptScreenPixelsHeight"
+          "Properties": "HardwareVendor,HardwareModel,HardwareName,IsMobile,JavascriptGetHighEntropyValues,Promise,Fetch,DeviceType,PlatformVendor,PlatformName,PlatformVersion,BrowserVendor,BrowserName,BrowserVersion,ScreenPixelsWidth,ScreenPixelsHeight,JavascriptScreenPixelsWidth,JavascriptScreenPixelsHeight,JavascriptHardwareProfile"
         }
       },
       {

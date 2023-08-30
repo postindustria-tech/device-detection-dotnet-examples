@@ -20,9 +20,11 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
+using FiftyOne.Pipeline.CloudRequestEngine;
 using FiftyOne.Pipeline.Core.Data;
 using FiftyOne.Pipeline.Engines;
 using FiftyOne.Pipeline.Engines.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -47,9 +49,9 @@ namespace FiftyOne.DeviceDetection.Examples
             {
                 result = function(data);
             }
-            catch (PropertyMissingException pex)
+            catch (Exception ex) when(ex is PropertyMissingException || ex is CloudRequestException || ex is JsonReaderException)
             {
-                result = $"Unknown ({pex.Message})";
+                result = $"Unknown ({ex.Message})";
             }
             return result;
         }

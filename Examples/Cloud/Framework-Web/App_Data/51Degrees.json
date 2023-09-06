@@ -33,7 +33,12 @@
     "BuildParameters": {
       "ClientSideEnabled": true,
       "ClientSideEvidenceEnabled": true,
-      "UseAsyncScript": true
+      "UseAsyncScript": true,
+
+      //Suppress and log any exceptions thrown from within (Web)Pipeline.Process() method
+      //By default it is `false`, we recommend keeping it that way during testing, but
+      //set to `true` in production to avoid any possible service unavailability
+      "SuppressProcessExceptions": true
     }
   }
 }

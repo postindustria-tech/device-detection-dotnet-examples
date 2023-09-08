@@ -3,6 +3,7 @@
 <%@ Import Namespace="FiftyOne.DeviceDetection" %>
 <%@ Import Namespace="FiftyOne.DeviceDetection.Examples" %>
 <%@ Import Namespace="FiftyOne.DeviceDetection.Cloud.FlowElements" %>
+<%@ Import Namespace="FiftyOne.Pipeline.Core.Exceptions" %>
 <%@ Import Namespace="FiftyOne.Pipeline.Web.Framework.Providers" %>
 
 <!DOCTYPE html>
@@ -86,11 +87,25 @@
                 var errors = flowData.Errors;
                 if (errors != null) { 
                     foreach (var nextError in errors) { 
-                        %><tr class="lightred"><td><b>Pipeline Error:</b></td><td> <%: nextError.ExceptionData %></td></tr><% 
+            %>
+            <tr class="lightred"><td><b>Pipeline Error:</b></td><td> <%: nextError.ExceptionData %></td></tr>
+            <% 
                     }
-                } else { 
-                    var deviceData = flowData.Get<IDeviceData>();
+                }
 
+                IDeviceData deviceData = null;
+                try
+                {
+                    deviceData = flowData.Get<IDeviceData>();
+                }
+                catch (PipelineException ex)
+                {
+            %>
+            <tr class="lightred"><td><b>Get IDeviceData Error:</b></td><td> <%: ex %></td></tr>
+            <% 
+                }
+
+                if (deviceData != null) {
                     // Note that below we are using some helper methods from the
                     // FiftyOne.DeviceDeteciton.Examples project (TryGetValue and GetHumanReadable)
                     // These are mostly intended to handle scenarios where device detection does

@@ -3,6 +3,7 @@
 <%@ Import Namespace="FiftyOne.DeviceDetection" %>
 <%@ Import Namespace="FiftyOne.DeviceDetection.Examples" %>
 <%@ Import Namespace="FiftyOne.DeviceDetection.Cloud.FlowElements" %>
+<%@ Import Namespace="FiftyOne.Pipeline.Core.Exceptions" %>
 <%@ Import Namespace="FiftyOne.Pipeline.Web.Framework.Providers" %>
 
 <!DOCTYPE html>
@@ -82,15 +83,35 @@
                 // Put the flow data and device data instances into local variables so we don't
                 // have to keep grabbing them.
                 var flowData = ((PipelineCapabilities)Request.Browser).FlowData;
-                var deviceData = flowData.Get<IDeviceData>();                
-                // Get the engine that is used to make requests to the cloud service.
-                var engine = flowData.Pipeline.GetElement<DeviceDetectionCloudEngine>(); 
-                // Note that below we are using some helper methods from the
-                // FiftyOne.DeviceDeteciton.Examples project (TryGetValue and GetHumanReadable)
-                // These are mostly intended to handle scenarios where device detection does
-                // not have an answer.
-                // In a production scenario, you will probably want to handle these scenarios 
-                // differently. Feel free to copy these helpers if they are useful though.
+
+                var errors = flowData.Errors;
+                if (errors != null) { 
+                    foreach (var nextError in errors) { 
+            %>
+            <tr class="lightred"><td><b>Pipeline Error:</b></td><td> <%: nextError.ExceptionData %></td></tr>
+            <% 
+                    }
+                }
+
+                IDeviceData deviceData = null;
+                try
+                {
+                    deviceData = flowData.Get<IDeviceData>();
+                }
+                catch (PipelineException ex)
+                {
+            %>
+            <tr class="lightred"><td><b>Get IDeviceData Error:</b></td><td> <%: ex %></td></tr>
+            <% 
+                }
+
+                if (deviceData != null) {
+                    // Note that below we are using some helper methods from the
+                    // FiftyOne.DeviceDeteciton.Examples project (TryGetValue and GetHumanReadable)
+                    // These are mostly intended to handle scenarios where device detection does
+                    // not have an answer.
+                    // In a production scenario, you will probably want to handle these scenarios 
+                    // differently. Feel free to copy these helpers if they are useful though.
             %>
             <tr class="lightyellow"><td><b>Hardware Vendor:</b></td><td> <%= deviceData.TryGetValue(d => d.HardwareVendor.GetHumanReadable()) %></td></tr>
             <tr class="lightyellow"><td><b>Hardware Name:</b></td><td> <%= deviceData.TryGetValue(d => d.HardwareName.GetHumanReadable()) %></td></tr>
@@ -103,6 +124,11 @@
             <tr class="lightyellow"><td><b>Browser Version:</b></td><td> <%= deviceData.TryGetValue(d => d.BrowserVersion.GetHumanReadable()) %></td></tr>
             <tr class="lightyellow"><td><b>Screen width (pixels):</b></td><td> <%= deviceData.TryGetValue(d => d.ScreenPixelsWidth.GetHumanReadable()) %></td></tr>
             <tr class="lightyellow"><td><b>Screen height (pixels):</b></td><td> <%= deviceData.TryGetValue(d => d.ScreenPixelsHeight.GetHumanReadable()) %></td></tr>
+            <%  
+                }
+                // Get the engine that is used to make requests to the cloud service.
+                var engine = flowData.Pipeline.GetElement<DeviceDetectionCloudEngine>();
+            %>
         </table>
         <br />
     

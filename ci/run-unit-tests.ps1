@@ -8,8 +8,6 @@ param(
     [string]$BuildMethod = "dotnet"
 )
 
-$env:COREHOST_TRACE=1
-$env:COREHOST_TRACE_VERBOSITY=4
-./dotnet/run-unit-tests.ps1 -RepoName $RepoName -ProjectDir $ProjectDir -Name $Name -Configuration $Configuration -Arch $Arch -BuildMethod $BuildMethod -Filter ".*Tests\.((?!Web\.dll)).*\.dll"
+./dotnet/run-unit-tests.ps1 -RepoName $RepoName -ProjectDir $ProjectDir -Name $Name -Configuration $Configuration -Arch $Arch -BuildMethod $BuildMethod -DirNameFormat "*" -Filter ".*\.sln"
 
 exit $LASTEXITCODE

@@ -9,6 +9,8 @@
 
     <Platforms>AnyCPU;x64;x86</Platforms>
 
+    <OutputType>Library</OutputType>
+
   </PropertyGroup>
 
   <ItemGroup>

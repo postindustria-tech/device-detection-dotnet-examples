@@ -29,9 +29,6 @@ using OpenQA.Selenium.Firefox;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
-using WebDriverManager.Helpers;
 using DevToolsSessionDomains = OpenQA.Selenium.DevTools.DevToolsSessionDomains;
 // Used to map new version features.
 using Enhanced = OpenQA.Selenium.DevTools.V114;
@@ -133,10 +130,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             // unexpected behaviour. 
             // See: https://sites.google.com/chromium.org/driver/downloads and
             // https://github.com/rosolko/WebDriverManager.Net
-            var setupResult =  new DriverManager().SetUpDriver(
-                new ChromeConfig(),
-                VersionResolveStrategy.Latest);
-            Console.WriteLine("Driver: " + setupResult);
             var chromeOptions = new ChromeOptions();
             chromeOptions.AcceptInsecureCertificates = true;
             chromeOptions.AddArgument("--headless=new");
@@ -163,10 +156,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// </summary>
         protected void InitializeEdgeDriver()
         {
-            var setupResult = new DriverManager().SetUpDriver(
-                new EdgeConfig(), 
-                VersionResolveStrategy.Latest);
-            Console.WriteLine("Driver: " + setupResult);
             var edgeOptions = new EdgeOptions();
             edgeOptions.AcceptInsecureCertificates = true;
             edgeOptions.AddArgument("--headless=new");
@@ -192,10 +181,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// </summary>
         protected void InitializeFirefoxDriver()
         {
-            var setupResult = new DriverManager().SetUpDriver(
-                new FirefoxConfig(),
-                VersionResolveStrategy.Latest);
-            Console.WriteLine("Driver: " + setupResult);
             var firefoxOptions = new FirefoxOptions();
             firefoxOptions.AcceptInsecureCertificates = true;
             firefoxOptions.AddArgument("--headless");

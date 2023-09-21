@@ -134,6 +134,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             chromeOptions.AcceptInsecureCertificates = true;
             chromeOptions.AddArgument("--headless=new");
             chromeOptions.AddArgument("--ignore-certificate-errors");
+            chromeOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
             try
             {
                 Driver = new ChromeDriver(chromeOptions);
@@ -159,6 +160,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             var edgeOptions = new EdgeOptions();
             edgeOptions.AcceptInsecureCertificates = true;
             edgeOptions.AddArgument("--headless=new");
+            edgeOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
             try
             {
                 Driver = new EdgeDriver(edgeOptions);
@@ -185,6 +187,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             firefoxOptions.AcceptInsecureCertificates = true;
             firefoxOptions.AddArgument("--headless");
             firefoxOptions.EnableDevToolsProtocol = true;
+            firefoxOptions.SetLoggingPreference(LogType.Browser, LogLevel.All);
             try
             {
                 Driver = new FirefoxDriver(firefoxOptions);

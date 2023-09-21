@@ -169,32 +169,44 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             string detectedBrowserVersion = null;
             string userAgent = null;
 
-            // This throws an exception if the timeout period elapses,
-            // which will cause the test to fail.
-            var result = new WebDriverWait(Driver, TEST_TIMEOUT).Until(
-                driver =>
-                {
-                    // Gets the value of the global JavaScript variable test
-                    // from the TEST_PAGE_ENDPOINT HTML page. Checks this value
-                    // is 'complete' to indiciate that the complete event
-                    // fired.
-                    var js = (IJavaScriptExecutor)driver;
-                    var test = js.ExecuteScript("return test");
-
-                    // Get the browser name and version from device detection
-                    // as returned in the complete event.
-                    if (test.Equals("complete"))
+            bool result;
+            try
+            {
+                // This throws an exception if the timeout period elapses,
+                // which will cause the test to fail.
+                result = new WebDriverWait(Driver, TEST_TIMEOUT).Until(
+                    driver =>
                     {
-                        userAgent = (string)js.ExecuteScript(
-                            "return navigator.userAgent");
-                        detectedBrowserName = (string)js.ExecuteScript(
-                            "return browserName");
-                        detectedBrowserVersion = (string)js.ExecuteScript(
-                            "return browserVersion");
-                        return true;
-                    }
-                    return false;
-                });
+                        // Gets the value of the global JavaScript variable test
+                        // from the TEST_PAGE_ENDPOINT HTML page. Checks this value
+                        // is 'complete' to indiciate that the complete event
+                        // fired.
+                        var js = (IJavaScriptExecutor)driver;
+                        var test = js.ExecuteScript("return test");
+
+                        // Get the browser name and version from device detection
+                        // as returned in the complete event.
+                        Console.WriteLine("[test] = '" + test.ToString() + "'");
+                        if (test.Equals("complete"))
+                        {
+                            userAgent = (string)js.ExecuteScript(
+                                "return navigator.userAgent");
+                            detectedBrowserName = (string)js.ExecuteScript(
+                                "return browserName");
+                            detectedBrowserVersion = (string)js.ExecuteScript(
+                                "return browserVersion");
+                            return true;
+                        }
+                        return false;
+                    });
+            }
+            finally
+            {
+                foreach (var l in Driver.Manage().Logs.GetLog(LogType.Browser))
+                {
+                    Console.WriteLine($"[LOGS] {l}");
+                }
+            }
 
             // Assert
             Assert.IsTrue(result);

@@ -21,12 +21,12 @@
  * ********************************************************************* */
 
 using FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web.OnPremise
 {
-    [TestClass]
     public class GettingStartedTest : GettingStartedTestOverrides<Program>
     {
+        public GettingStartedTest(WebApplicationFactory<Program> factory) : base(factory) { }
     }
 }

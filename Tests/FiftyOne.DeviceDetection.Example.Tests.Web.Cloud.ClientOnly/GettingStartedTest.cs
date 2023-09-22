@@ -21,12 +21,12 @@
  * ********************************************************************* */
 
 using FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.ClientOnly;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud.ClientOnly
 {
-    [TestClass]
     public class GettingStartedTest : GettingStartedTestBase<Program>
     {
+        public GettingStartedTest(WebApplicationFactory<Program> factory) : base(factory) { }
     }
 }

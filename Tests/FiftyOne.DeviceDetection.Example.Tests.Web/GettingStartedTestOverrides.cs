@@ -20,7 +20,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,12 +28,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
     public class GettingStartedTestOverrides<T> : GettingStartedTestBase<T>
         where T : class
     {
+        public GettingStartedTestOverrides(WebApplicationFactory<T> factory) : base(factory) { }
+
         /// <summary>
         /// Profile ids to use for testing. These are extracted from 51Degrees
         /// device database and are known to not relate to User-Agents. They
@@ -192,12 +195,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             OverrideProfileIds.OrderBy(i => 
             Guid.NewGuid()).Take(10).Select(i => new object[] { i });
 
-        [TestMethod]
-        [DynamicData(nameof(TestProfileIds), DynamicDataSourceType.Property)]
+        [Theory]
+        [MemberData(nameof(TestProfileIds))]
         public async Task VerifyExample_ProfileId_Override(int profileId)
         {
             // Setup
-            using (var http = CreateClient())
+            using (var http = Factory.CreateClient())
             using (var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -223,15 +226,15 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 var response = await http.SendAsync(request);
 
                 // Assert
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var content = await response.Content.ReadAsStringAsync();
                 var output = JsonConvert.DeserializeObject<OverrideResponse>(content);
-                Assert.IsNotNull(output);
-                Assert.IsNotNull(output.device);
+                Assert.NotNull(output);
+                Assert.NotNull(output.device);
                 var device = output.device;
-                Assert.IsNotNull(device.deviceid);
+                Assert.NotNull(device.deviceid);
                 var deviceId = device.deviceid.Split("-");
-                Assert.AreEqual(profileId, int.Parse(deviceId[0]));
+                Assert.Equal(profileId, int.Parse(deviceId[0]));
             }
         }
 
@@ -243,12 +246,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        [TestMethod]
-        [DynamicData(nameof(Parameters.AllUrlsData), typeof(Parameters))]
+        [Theory]
+        [MemberData(nameof(AllUrlsData))]
         public async Task VerifyExample_PropertyValue_Override(string url)
         {
             // Setup
-            using (var http = CreateClient())
+            using (var http = Factory.CreateClient())
             using (var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -275,16 +278,16 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 var response = await http.SendAsync(request);
 
                 // Assert
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var content = await response.Content.ReadAsStringAsync();
                 var output = JsonConvert.DeserializeObject<OverrideResponse>(content);
-                Assert.IsNotNull(output);
-                Assert.IsNotNull(output.device);
+                Assert.NotNull(output);
+                Assert.NotNull(output.device);
                 var device = output.device;
-                Assert.IsNotNull(device.screenpixelsheight);
-                Assert.IsNotNull(device.screenpixelswidth);
-                Assert.AreEqual(screenPixelsWidth, device.screenpixelswidth);
-                Assert.AreEqual(screenPixelsHeight, device.screenpixelsheight);
+                Assert.NotNull(device.screenpixelsheight);
+                Assert.NotNull(device.screenpixelswidth);
+                Assert.Equal(screenPixelsWidth, device.screenpixelswidth);
+                Assert.Equal(screenPixelsHeight, device.screenpixelsheight);
             }
         }
     }

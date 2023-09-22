@@ -21,28 +21,38 @@
  * ********************************************************************* */
 
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
-    public class GettingStartedTestBase<T> : WebApplicationFactory<T>
+    public class GettingStartedTestBase<T>: IClassFixture<WebApplicationFactory<T>>
         where T : class
     {
+        protected readonly WebApplicationFactory<T> Factory;
+
+        public GettingStartedTestBase(WebApplicationFactory<T> factory)
+        {
+            Factory = factory;
+        }
+
+        public static IEnumerable<object[]> AllUrlsData => Parameters.AllUrlsData;
+
         /// <summary>
         /// Test that the running server is able to run and returns code 200 
         /// upon http(s) request.
         /// </summary>
         /// <returns></returns>
-        [TestMethod]
-        [DynamicData(nameof(Parameters.AllUrlsData),typeof(Parameters))]
+        [Theory]
+        [MemberData(nameof(AllUrlsData))]
         public async Task VerifyExample_Returns_Status_Code_200(string url)
         {
             // Setup
-            using (var http = CreateClient())
+            using (var http = Factory.CreateClient())
             using (var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -55,7 +65,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 var response = await http.SendAsync(request);
 
                 // Assert
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             }
         }
     }

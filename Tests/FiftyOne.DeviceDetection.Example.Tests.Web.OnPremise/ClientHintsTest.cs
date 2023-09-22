@@ -71,7 +71,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.OnPremise
 
             // Zero based index of the element in the array of the original
             // appsettings file.
-            var elementIndex = 0;
+            var elementIndex = 1;
             var ddEngineParametersPrefix = $"PipelineOptions:Elements:" +
                 $"{elementIndex}:BuildParameters:";
             var propertiesConfigKey = $"{ddEngineParametersPrefix}Properties";

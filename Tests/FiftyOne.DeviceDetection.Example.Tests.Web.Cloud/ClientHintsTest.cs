@@ -56,7 +56,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud
         {
             // Zero based index of the element in the array of the original
             // appsettings file.
-            var elementIndex = 1;
+            var elementIndex = 0;
             var requestEnginePrefix = $"PipelineOptions:Elements:" +
                 $"{elementIndex}:BuildParameters:";
             var resourceKeyConfigKey = $"{requestEnginePrefix}ResourceKey";

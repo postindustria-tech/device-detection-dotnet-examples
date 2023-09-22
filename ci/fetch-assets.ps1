@@ -56,7 +56,3 @@ New-Item -ItemType SymbolicLink -Force -Target "$assets/51Degrees-LiteV4.1.hash"
 New-Item -ItemType SymbolicLink -Force -Target "$assets/20000 Evidence Records.yml" -Path "$deviceDetectionData/20000 Evidence Records.yml"
 New-Item -ItemType SymbolicLink -Force -Target "$assets/20000 User Agents.csv" -Path "$deviceDetectionData/20000 User Agents.csv"
 # New-Item -ItemType SymbolicLink -Force -Target "$assets/51Degrees.csv" -Path "$RepoName/fiftyone_devicedetection_cloud/tests/51Degrees.csv"
-
-$cloud_config = [IO.Path]::Combine($pwd, $RepoName, "Examples", "Cloud", "GettingStarted-Web", "appsettings.json")
-Write-Output "Dumping '$cloud_config':"
-Get-Content $cloud_config

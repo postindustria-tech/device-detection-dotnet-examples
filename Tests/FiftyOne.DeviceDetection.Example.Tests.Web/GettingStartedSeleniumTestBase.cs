@@ -220,6 +220,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 $"Expected '{BrowserName}' to be present in '{detectedBrowserName}'");
 
             // Check the major browser information is the same.
+            Assert.AreNotEqual("Unknown", detectedBrowserVersion, $"Failed to detect browser version --- returned '{detectedBrowserVersion}'");
             var version = ParseVersion(detectedBrowserVersion);
             Assert.AreEqual(BrowserVersion.Major, version.Major);
         }

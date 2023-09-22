@@ -232,8 +232,17 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// <exception cref="ArgumentException"></exception>
         private static Version ParseVersion(string value)
         {
-            var numbers = value.Split(".").Select(i => 
-                int.Parse(i)).ToArray();
+            Func<string> ErrorText = () => $"'{value}' invalid version";
+            int[] numbers;
+            try
+            {
+                numbers = value.Split(".").Select(i =>
+                    int.Parse(i)).ToArray();
+            }
+            catch (Exception e) when (e is FormatException || e is OverflowException)
+            {
+                throw new ArgumentException(ErrorText(), e);
+            }
             switch(numbers.Length)
             {
                 case 1:
@@ -246,7 +255,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     return new Version(numbers[0], numbers[1], numbers[2], 
                         numbers[3]);
                 default:
-                    throw new ArgumentException($"'{value}' invalid version");
+                    throw new ArgumentException(ErrorText());
             }
         }
     }

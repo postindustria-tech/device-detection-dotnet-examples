@@ -31,7 +31,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DevToolsSessionDomains = OpenQA.Selenium.DevTools.DevToolsSessionDomains;
 // Used to map new version features.
-using Enhanced = OpenQA.Selenium.DevTools.V114;
+using Enhanced = OpenQA.Selenium.DevTools.V117;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {

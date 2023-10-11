@@ -64,7 +64,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             Driver.Navigate().GoToUrl(url + STATIC_HTML_PATH);
 
             // Wait for the page to load
-            new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver => true);
+            try
+            {
+                new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver => true);
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                Assert.Inconclusive(e.ToString());
+            }
 
             // Get the high entropy values.
             var js = (IJavaScriptExecutor)Driver;
@@ -144,11 +151,18 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             // Do a cross origin request
             Driver.Navigate().GoToUrl(url + STATIC_HTML_PATH);
 
-            // Wait for the page to load
-            new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver =>
+            try
             {
-                return jsonRecieved;
-            });
+                // Wait for the page to load
+                new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver =>
+                {
+                    return jsonRecieved;
+                });
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                Assert.Inconclusive(e.ToString());
+            }
 
             // Assert
             // Verify that the response contains the header

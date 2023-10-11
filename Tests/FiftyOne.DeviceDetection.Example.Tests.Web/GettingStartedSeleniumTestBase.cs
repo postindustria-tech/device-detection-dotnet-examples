@@ -217,6 +217,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             catch (WebDriverTimeoutException e)
             {
                 Assert.Inconclusive(e.ToString());
+                throw;
             }
             finally
             {

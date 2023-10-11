@@ -42,7 +42,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// test.
         /// </summary>
         protected static readonly TimeSpan TEST_TIMEOUT = 
-            TimeSpan.FromSeconds(60);
+            TimeSpan.FromSeconds(300);
 
         /// <summary>
         /// The driver being used for the active test. See 

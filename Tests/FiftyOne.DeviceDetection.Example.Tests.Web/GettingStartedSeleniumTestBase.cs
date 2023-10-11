@@ -90,6 +90,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             }
 
             var cookies = Network.GetAllCookies().Result;
+
+            Console.WriteLine("Enumerating cookie names:");
+            foreach (var nextName in cookies.Cookies.Select(c => c.Name))
+            {
+                Console.WriteLine($"- Next cookie name: '{nextName}'");
+            }
+            Console.WriteLine("Finished numerating cookie names!");
+
             var fod_cookie = cookies.Cookies.Where(c =>
                 c.Name == "51D_GetHighEntropyValues").Single();
 

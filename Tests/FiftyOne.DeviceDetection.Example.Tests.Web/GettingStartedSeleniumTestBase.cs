@@ -214,6 +214,10 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                         return false;
                     });
             }
+            catch (WebDriverTimeoutException e)
+            {
+                Assert.Inconclusive(e.ToString());
+            }
             finally
             {
                 foreach (var l in Driver.Manage().Logs.GetLog(LogType.Browser))

@@ -108,17 +108,23 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         [TestCleanup]
         public void TestCleanup()
         {
-            if (Driver != null)
-            {
-                Driver.Quit();
-                Driver.Dispose();
-            }
             if (ServerTask != null)
             {
                 StopSource.Cancel(true);
                 ServerTask.Wait();
             }
         }
+
+        [ClassCleanup]
+        public void ClassCleanup()
+        {
+            if (Driver != null)
+            {
+                Driver.Quit();
+                Driver.Dispose();
+            }
+        }
+
 
         /// <summary>
         /// Sets the <see cref="Driver"/> property for Chrome tests. If the 

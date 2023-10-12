@@ -115,13 +115,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.OnPremise
         /// <summary>
         /// Test the UpdateDataFile Example
         /// </summary>
-        //[TestMethod]
-        //public void Example_OnPremise_UpdateDataFile()
-        //{
-        //    VerifyLicenseKeyAvailable();
-        //    Examples.OnPremise.UpdateDataFile.Program.Initialize(
-        //        DataFile, LicenseKey, false);
-        //}
+        [TestMethod]
+        public void Example_OnPremise_UpdateDataFile()
+        {
+            Assert.Inconclusive("DISABLED");
+            VerifyLicenseKeyAvailable();
+            Examples.OnPremise.UpdateDataFile.Program.Initialize(
+                DataFile, LicenseKey, false);
+        }
 
         /// <summary>
         /// Test the match metrics Example

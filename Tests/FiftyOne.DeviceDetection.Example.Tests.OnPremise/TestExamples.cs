@@ -118,7 +118,6 @@ namespace FiftyOne.DeviceDetection.Example.Tests.OnPremise
         [TestMethod]
         public void Example_OnPremise_UpdateDataFile()
         {
-            Assert.Inconclusive("DISABLED");
             VerifyLicenseKeyAvailable();
             Examples.OnPremise.UpdateDataFile.Program.Initialize(
                 DataFile, LicenseKey, false);

@@ -239,6 +239,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         }
 
         /// <summary>
+        /// Indicates whether <see cref="VerifyExample_PropertyValue_Override"/> tests
+        /// make any sense for this class.
+        /// </summary>
+        protected virtual bool SupportsPropertyOverrides => true;
+
+        /// <summary>
         /// Passes form parameters to override the pixel width and height of 
         /// the hardware profile associated with the User-Agent string. Checks
         /// that the overridden values are returned and not the fixed values 
@@ -246,10 +252,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        [Theory]
+        [SkippableTheory]
         [MemberData(nameof(AllUrlsData))]
         public async Task VerifyExample_PropertyValue_Override(string url)
         {
+            Skip.IfNot(
+                SupportsPropertyOverrides, 
+                $"{nameof(SupportsPropertyOverrides)} indicates this engine does not support property overrides.");
+
             // Setup
             using (var http = Factory.CreateClient())
             using (var request = new HttpRequestMessage

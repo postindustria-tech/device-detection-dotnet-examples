@@ -28,5 +28,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.OnPremise
     public class GettingStartedTest : GettingStartedTestOverrides<Program>
     {
         public GettingStartedTest(WebApplicationFactory<Program> factory) : base(factory) { }
+
+        protected override bool SupportsPropertyOverrides => false;
     }
 }

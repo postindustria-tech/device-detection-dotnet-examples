@@ -114,7 +114,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             107548,
             107549,
             107555,
-            108371,
+            //108371,
             108616,
             108677,
             108704,
@@ -139,7 +139,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             122490,
             122500,
             122587,
-            122591,
+            //122591,
             122593,
             122594,
             122690,
@@ -147,7 +147,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             123079,
             123080,
             123082,
-            123083,
+            //123083,
             123106,
             123109,
             123156,
@@ -160,7 +160,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             123629,
             123631,
             123632,
-            124548 
+            //124548 
         };
 
         /// <summary>

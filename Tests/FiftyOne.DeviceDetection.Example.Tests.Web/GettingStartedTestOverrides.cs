@@ -191,10 +191,9 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// Returns a random selection of 10 profile ids to check.
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<object[]> TestProfileIds =>
-            //OverrideProfileIds.OrderBy(i => 
-            //Guid.NewGuid()).Take(10).Select(i => new object[] { i });
-            OverrideProfileIds.Select(i => new object[] { i });
+        public static IEnumerable<object[]> TestProfileIds => 
+            OverrideProfileIds.OrderBy(i => 
+            Guid.NewGuid()).Take(10).Select(i => new object[] { i });
 
         [Theory]
         [MemberData(nameof(TestProfileIds))]

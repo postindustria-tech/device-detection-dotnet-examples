@@ -11,9 +11,13 @@
 
   <ItemGroup>
     <Content Remove="appsettings.json" />
+    <Content Remove="appsettings_51.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="appsettings_51.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

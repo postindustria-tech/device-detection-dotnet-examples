@@ -69,7 +69,9 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                 {
                     builder.ConfigureAppConfiguration(config =>
                     {
-                        config.AddInMemoryCollection(overrides);
+                        config
+                            .AddConfiguration(baseConfig)
+                            .AddInMemoryCollection(overrides);
                     })
                     .UseUrls(Constants.AllUrls)
                     .UseStartup<Startup>()
@@ -78,7 +80,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
 
         private static IConfiguration CreateConfiguration()
             => new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings_51.json")
                 .Build();
 
         /// <summary>

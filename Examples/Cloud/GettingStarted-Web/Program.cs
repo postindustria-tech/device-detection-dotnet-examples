@@ -69,8 +69,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                 {
                     builder.ConfigureAppConfiguration(config =>
                     {
-                        config.AddConfiguration(baseConfig)
-                            .AddInMemoryCollection(overrides);
+                        config.AddInMemoryCollection(overrides);
                     })
                     .UseUrls(Constants.AllUrls)
                     .UseStartup<Startup>()

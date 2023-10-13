@@ -104,7 +104,9 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                 // Get the index of the cloud request engine element in the config file so that
                 // we can create an override key for it.
                 var cloudEngineOptions = options.GetElementConfig(nameof(CloudRequestEngine));
+                Console.WriteLine($"{nameof(cloudEngineOptions)}.{nameof(cloudEngineOptions.BuilderName)} = '{cloudEngineOptions.BuilderName}'");
                 var cloudEngineIndex = options.Elements.IndexOf(cloudEngineOptions);
+                Console.WriteLine($"{nameof(CloudRequestEngine)} located at element {cloudEngineIndex}.");
                 var resourceKeyConfigKey = $"PipelineOptions:Elements:{cloudEngineIndex}" +
                     $":BuildParameters:ResourceKey";
 
@@ -113,6 +115,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
 
                 if (string.IsNullOrEmpty(resourceKey) == false)
                 {
+                    Console.WriteLine($"Attempting to override '{resourceKeyConfigKey}'");
                     result.Add(resourceKeyConfigKey, resourceKey);
                 }
                 else

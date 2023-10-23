@@ -23,6 +23,9 @@ $deviceDetectionData = $DataFileDir
 
 $downloads = @{
     "TAC-HashV41.hash" = {
+        # workaround, see https://github.com/actions/runner-images/issues/8598
+        $env:PATH = $env:PATH -replace "C:\\Strawberry\\c\\bin;"
+
         ./steps/fetch-hash-assets.ps1 -RepoName $RepoName -LicenseKey $DeviceDetection -Url $DeviceDetectionUrl
         Move-Item -Path $RepoName/$file -Destination $assets
     }

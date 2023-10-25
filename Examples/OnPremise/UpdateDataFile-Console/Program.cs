@@ -334,14 +334,19 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.UpdateDataFile
                 {
                     licenseKey = Environment.GetEnvironmentVariable(Constants.LICENSE_KEY_ENV_VAR);
                 }
-                if (licenseKey == null || ExampleUtils.IsInvalidKey(licenseKey))
+                const string keySubmissionPaths = "as the second command line argument to this program, or as " +
+                        $"an environment variable named '{Constants.LICENSE_KEY_ENV_VAR}'";
+                if (licenseKey == null)
                 {
                     logger.LogError("In order to test this example you will need a 51Degrees " +
                         "Enterprise license which can be obtained on a trial basis or purchased " +
                         "from our pricing page https://51degrees.com/pricing. You must supply the " +
-                        "license key as the second command line argument to this program, or as " +
-                        $"an environment variable named '{Constants.LICENSE_KEY_ENV_VAR}'");
+                        "license key " + keySubmissionPaths);
                     throw new ArgumentException("No license key available", nameof(licenseKey));
+                }
+                if (ExampleUtils.IsInvalidKey(licenseKey))
+                {
+                    logger.LogWarning("The license key supplied (" + keySubmissionPaths + ") is probably invalid.");
                 }
 
                 return licenseKey;

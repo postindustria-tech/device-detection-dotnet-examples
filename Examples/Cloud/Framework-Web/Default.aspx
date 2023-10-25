@@ -68,12 +68,26 @@
             The following values are determined by sever-side device detection
             on the first request:
         </p>
+        <%
+            string isMobileDeviceString;
+            try
+            {
+                isMobileDeviceString = Request.Browser.IsMobileDevice ? "Yes" : "No";
+            }
+            catch (Exception ex)
+            {
+                isMobileDeviceString = "Unknown";
+        %>
+                <p class="lightred"><%: ex %></p>
+        <%
+            }
+        %>
         <p>
             Note that all values below are retrieved using the strongly typed approach, 
             which is new for version 4. In order to provide easier migration for sites using 
             version 3 of this API, you can also access some properties from the 
             HttpBrowserCapabilities object. For example, is this site being accessed with 
-            a mobile device? <strong><%= Request.Browser.IsMobileDevice ? "Yes" : "No" %></strong></p>
+            a mobile device? <strong><%: isMobileDeviceString %></strong></p>
         <table>
             <tr>
                 <th>Key</th>

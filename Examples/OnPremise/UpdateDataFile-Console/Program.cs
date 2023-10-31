@@ -64,7 +64,7 @@ using System.Net.Http;
 /// ## Lite Data File
 /// Lite data files (free-to-use, limited capabilities, no license key required) are created roughly
 /// once a month and cannot be updated using auto-update, they may be downloaded from
-/// (Github)[href=https://github.com/51Degrees/device-detection-data] and are included with
+/// [Github](href=https://github.com/51Degrees/device-detection-data) and are included with
 /// source distributions of this software.
 /// 
 /// # Update on Start-Up

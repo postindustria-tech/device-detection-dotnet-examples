@@ -40,7 +40,7 @@ using System.Text;
 ///
 /// @include{doc} example-getting-started-cloud.txt
 /// 
-/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet/blob/master/Examples/Cloud/GettingStarted-Console/Program.cs). 
+/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet-examples/blob/main/Examples/Cloud/GettingStarted-Console/Program.cs). 
 /// 
 /// @include{doc} example-require-resourcekey.txt
 ///

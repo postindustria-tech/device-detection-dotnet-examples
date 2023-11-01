@@ -42,7 +42,7 @@ using Constants = FiftyOne.DeviceDetection.Examples.Constants;
 /// @example OnPremise/AppleServerSideConfig-Console/Program.cs
 /// 
 /// Detection of the specific models of Apple devices being used to make a request is 
-/// [more difficult](http://51degrees.com/documentation/4.4/_device_detection__features__apple_detection.html) 
+/// [more difficult](https://51degrees.com/documentation/4.4/_device_detection__features__apple_detection.html) 
 /// than it is for other vendors.
 /// 
 /// Typically, the 51Degrees approach is to use dynamically generated JavaScript to determine the
@@ -53,11 +53,11 @@ using Constants = FiftyOne.DeviceDetection.Examples.Constants;
 /// 
 /// This example demonstrates this alternative approach. 
 /// 
-/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet/blob/master/Examples/OnPremise/AppleServerSide-Console/Program.cs). 
+/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet-examples/blob/master/Examples/OnPremise/AppleServerSide-Console/Program.cs). 
 /// 
 /// This example requires a paid-for data file as the device model properties are not available
 /// in the free, 'lite' data file.
-/// See our [pricing page](http://51degrees.com/pricing) for details on how to obtain one. 
+/// See our [pricing page](https://51degrees.com/pricing) for details on how to obtain one. 
 /// 
 /// This variation shows how to create the pipeline from a configuration file: 
 /// @include OnPremise/AppleServerSideConfig-Console/appsettings.json

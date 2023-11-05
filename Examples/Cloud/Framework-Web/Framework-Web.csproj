@@ -98,6 +98,7 @@
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.48" />
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.49" />
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.50" />
+    <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.50" />
     <PackageReference Include="FiftyOne.Pipeline.Web">
       <Version>4.4.44</Version>
     </PackageReference>
@@ -110,6 +111,7 @@
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.48" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.48" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.49" />
+    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.50" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.50" />
     <PackageReference Include="Microsoft.Web.Infrastructure">
       <Version>2.0.0</Version>

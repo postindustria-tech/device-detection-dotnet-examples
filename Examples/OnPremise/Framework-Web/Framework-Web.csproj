@@ -159,6 +159,7 @@
     <PackageReference Include="FiftyOne.DeviceDetection.Hash.Engine.OnPremise" Version="4.4.78" />
     <PackageReference Include="FiftyOne.DeviceDetection.Hash.Engine.OnPremise" Version="4.4.79" />
     <PackageReference Include="FiftyOne.DeviceDetection.Hash.Engine.OnPremise" Version="4.4.80" />
+    <PackageReference Include="FiftyOne.DeviceDetection.Hash.Engine.OnPremise" Version="4.4.81" />
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder">
       <Version>4.4.44</Version>
     </PackageReference>
@@ -199,6 +200,7 @@
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.56" />
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.57" />
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.57" />
+    <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.57" />
     <PackageReference Include="FiftyOne.Pipeline.Web">
       <Version>4.4.44</Version>
     </PackageReference>
@@ -237,6 +239,7 @@
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.56" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.56" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.56" />
+    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.57" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.57" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.57" />
     <PackageReference Include="Microsoft.Web.Infrastructure">

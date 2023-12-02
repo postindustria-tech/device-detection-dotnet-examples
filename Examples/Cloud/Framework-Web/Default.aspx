@@ -237,15 +237,20 @@
             // When the event fires, use the supplied data to populate a new table.
             let fieldValues = [];
 
-            var hardwareName = typeof data.device.hardwarename == "undefined" ?
-                "Unknown" : data.device.hardwarename.join(", ")
-            fieldValues.push(["Hardware Name: ", hardwareName]);
-            fieldValues.push(["Platform: ",
-                data.device.platformname + " " + data.device.platformversion]);
-            fieldValues.push(["Browser: ",
-                data.device.browsername + " " + data.device.browserversion]);
-            fieldValues.push(["Screen width (pixels): ", data.device.screenpixelswidth]);
-            fieldValues.push(["Screen height (pixels): ", data.device.screenpixelsheight]);
+            if (data.errors) {
+                fieldValues = data.errors.map(e => ["Error: ", e, "lightred"]);
+            }
+            if (data.device) {
+                var hardwareName = typeof data.device.hardwarename == "undefined" ?
+                    "Unknown" : data.device.hardwarename.join(", ")
+                fieldValues.push(["Hardware Name: ", hardwareName]);
+                fieldValues.push(["Platform: ",
+                    data.device.platformname + " " + data.device.platformversion]);
+                fieldValues.push(["Browser: ",
+                    data.device.browsername + " " + data.device.browserversion]);
+                fieldValues.push(["Screen width (pixels): ", data.device.screenpixelswidth]);
+                fieldValues.push(["Screen height (pixels): ", data.device.screenpixelsheight]);
+            }
             displayValues(fieldValues);
         });
     }
@@ -260,7 +265,7 @@
 
         fieldValues.forEach(function (entry) {
             var tr = document.createElement("tr");
-            tr.classList.add("lightyellow");
+            tr.classList.add(entry.length > 2 ? entry[2] : "lightyellow");
             addToRow(tr, "td", entry[0], true);
             addToRow(tr, "td", entry[1], false);
             table.appendChild(tr);

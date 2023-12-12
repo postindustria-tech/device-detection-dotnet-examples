@@ -20,14 +20,14 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using FiftyOne.DeviceDetection.Cloud.FlowElements;
-using FiftyOne.Pipeline.CloudRequestEngine.FlowElements;
-using FiftyOne.Pipeline.Engines.FiftyOne.FlowElements;
-using FiftyOne.Pipeline.JavaScriptBuilder.FlowElement;
-using FiftyOne.Pipeline.JsonBuilder.FlowElement;
+//using FiftyOne.DeviceDetection.Cloud.FlowElements;
+//using FiftyOne.Pipeline.CloudRequestEngine.FlowElements;
+//using FiftyOne.Pipeline.Engines.FiftyOne.FlowElements;
+//using FiftyOne.Pipeline.JavaScriptBuilder.FlowElement;
+//using FiftyOne.Pipeline.JsonBuilder.FlowElement;
 using System;
 using System.Web;
-using FiftyOne.DeviceDetection.Uach;
+//using FiftyOne.DeviceDetection.Uach;
 
 namespace Framework_Web
 {
@@ -39,12 +39,12 @@ namespace Framework_Web
             // app domain.
             // This is needed in order from BuildFromConfiguration to be able to find the
             // relevant builder types when using reflection.
-            AppDomain.CurrentDomain.Load(typeof(UachJsConversionElement).Assembly.GetName());
-            AppDomain.CurrentDomain.Load(typeof(CloudRequestEngine).Assembly.GetName());
-            AppDomain.CurrentDomain.Load(typeof(DeviceDetectionCloudEngine).Assembly.GetName());
-            AppDomain.CurrentDomain.Load(typeof(JavaScriptBuilderElement).Assembly.GetName());
-            AppDomain.CurrentDomain.Load(typeof(JsonBuilderElement).Assembly.GetName());
-            AppDomain.CurrentDomain.Load(typeof(SequenceElementBuilder).Assembly.GetName());
+            //AppDomain.CurrentDomain.Load(typeof(UachJsConversionElement).Assembly.GetName());
+            //AppDomain.CurrentDomain.Load(typeof(CloudRequestEngine).Assembly.GetName());
+            //AppDomain.CurrentDomain.Load(typeof(DeviceDetectionCloudEngine).Assembly.GetName());
+            //AppDomain.CurrentDomain.Load(typeof(JavaScriptBuilderElement).Assembly.GetName());
+            //AppDomain.CurrentDomain.Load(typeof(JsonBuilderElement).Assembly.GetName());
+            //AppDomain.CurrentDomain.Load(typeof(SequenceElementBuilder).Assembly.GetName());
         }
     }
 }

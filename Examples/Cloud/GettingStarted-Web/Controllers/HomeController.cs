@@ -44,15 +44,16 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb.Controllers
 
         public IActionResult Index()
         {
-            // Log warnings if the data file is too old or the 'Lite' file is being used.
-            if(_checkedDataFile == false)
-            {
-                ExampleUtils.CheckDataFile(_provider.GetFlowData().Pipeline, _logger);
-                _checkedDataFile = true;
-            }
-            // Use the provider to get the flow data. This contains the results of device
-            // detection that has been performed by the pipeline.
-            return View(new IndexModel(_provider.GetFlowData(), Response.Headers));
+            return null;
+            //// Log warnings if the data file is too old or the 'Lite' file is being used.
+            //if(_checkedDataFile == false)
+            //{
+            //    ExampleUtils.CheckDataFile(_provider.GetFlowData().Pipeline, _logger);
+            //    _checkedDataFile = true;
+            //}
+            //// Use the provider to get the flow data. This contains the results of device
+            //// detection that has been performed by the pipeline.
+            //return View(new IndexModel(_provider.GetFlowData(), Response.Headers));
         }
     }
 }

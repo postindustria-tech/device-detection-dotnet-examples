@@ -32,6 +32,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -69,10 +70,24 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedConsole
                 using (var pipeline = new FiftyOnePipelineBuilder(loggerFactory, serviceProvider)
                     .BuildFromConfiguration(pipelineOptions))
                 {
-                    // Carry out some sample detections
+                    var deviceIDs = new List<string>(ExampleUtils.EvidenceValues.Count);
+
+                    // carry out some sample detections
+                    // and collect device IDs
                     foreach (var values in ExampleUtils.EvidenceValues)
                     {
-                        AnalyseEvidence(values, pipeline, output);
+                        AnalyseEvidence(values, pipeline, output, out var nextDeviceID);
+                        deviceIDs.Add(nextDeviceID);
+                    }
+
+                    // carry out detections using pre-acquired deviceIDs
+                    foreach (var nextDeviceID in deviceIDs.Where(d => d is not null))
+                    {
+                        var evidence = new Dictionary<string, object>()
+                        {
+                            { "query.51D_deviceId", nextDeviceID },
+                        };
+                        AnalyseEvidence(evidence, pipeline, output, out _);
                     }
                 }
             }
@@ -80,7 +95,8 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedConsole
             private void AnalyseEvidence(
                 Dictionary<string, object> evidence,
                 IPipeline pipeline,
-                TextWriter output)
+                TextWriter output,
+                out string deviceID)
             {
                 // FlowData is a data structure that is used to convey information required for
                 // detection and the results of the detection through the pipeline.
@@ -124,7 +140,11 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedConsole
                     OutputValue("Platform Version", device.PlatformVersion, message);
                     OutputValue("Browser Name", device.BrowserName, message);
                     OutputValue("Browser Version", device.BrowserVersion, message);
+                    OutputValue("DeviceId", device.DeviceId, message);
                     output.WriteLine(message.ToString());
+
+                    // 'Return' the Device ID string to the caller
+                    deviceID = device.DeviceId.HasValue ? device.DeviceId.Value : null;
                 }
             }
 

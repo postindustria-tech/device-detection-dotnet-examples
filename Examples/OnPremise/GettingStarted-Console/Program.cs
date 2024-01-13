@@ -27,6 +27,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 /// <summary>
@@ -71,10 +72,24 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedConsole
                     .SetDataFileSystemWatcher(false)
                     .Build())
                 {
+                    var deviceIDs = new List<string>(ExampleUtils.EvidenceValues.Count);
+
                     // carry out some sample detections
+                    // and collect device IDs
                     foreach (var values in ExampleUtils.EvidenceValues)
                     {
-                        AnalyseEvidence(values, pipeline, output);
+                        AnalyseEvidence(values, pipeline, output, out var nextDeviceID);
+                        deviceIDs.Add(nextDeviceID);
+                    }
+
+                    // carry out detections using pre-acquired deviceIDs
+                    foreach (var nextDeviceID in deviceIDs.Where(d => d is not null))
+                    {
+                        var evidence = new Dictionary<string, object>()
+                        {
+                            { "query.51D_deviceId", nextDeviceID },
+                        };
+                        AnalyseEvidence(evidence, pipeline, output, out _);
                     }
 
                     ExampleUtils.CheckDataFile(pipeline, loggerFactory.CreateLogger<Program>());
@@ -84,7 +99,8 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedConsole
             private void AnalyseEvidence(
                 Dictionary<string, object> evidence, 
                 IPipeline pipeline, 
-                TextWriter output)
+                TextWriter output,
+                out string deviceID)
             {
                 // FlowData is a data structure that is used to convey information required for
                 // detection and the results of the detection through the pipeline.
@@ -135,6 +151,9 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedConsole
                         message.AppendLine($"\t{entry}");
                     }
                     output.WriteLine(message.ToString());
+
+                    // 'Return' the Device ID string to the caller
+                    deviceID = device.DeviceId.HasValue ? device.DeviceId.Value : null;
                 }
             }
 

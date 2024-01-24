@@ -148,7 +148,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             123080,
             123082,
             //123083,
-            123106,
+            //123106,
             123109,
             123156,
             123157,

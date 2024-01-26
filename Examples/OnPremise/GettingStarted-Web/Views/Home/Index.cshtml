@@ -124,6 +124,33 @@
     </div>
     <br />
 
+
+    <div id="filter">
+        <h3>Evidence Filter</h3>
+        <div>
+            <h4>PIPELINE</h4>
+            <ul>
+                @foreach (var entry in Model.PipelineWhitelist)
+                {
+                    <li>@(entry.Key)</li>
+                }
+            </ul>
+            <h4>ELEMENTS</h4>
+            <ul>
+                @foreach (var entry in Model.CompleteWhitelist)
+                {
+                    <li>@(entry.Key)</li>
+                    <ul>
+                    @foreach (var s in entry.Value)
+                    {
+                        <li>@(s)</li>
+                    }
+                    </ul>
+                }
+            </ul>
+        </div>
+    </div>
+
     <div id="response-headers">
         <h3>Response headers</h3>
         <table>

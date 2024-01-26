@@ -92,5 +92,22 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb.Model
             ScreenHeight = deviceData.TryGetValue(d => d.ScreenPixelsHeight.GetHumanReadable());
             DeviceId = deviceData.TryGetValue(d => d.DeviceId.GetHumanReadable());
         }
+
+        public IEnumerable<KeyValuePair<string, int>> PipelineWhitelist
+            => (FlowData.Pipeline.EvidenceKeyFilter as EvidenceKeyFilterWhitelist)?.Whitelist ?? Enumerable.Empty< KeyValuePair<string, int>>();
+
+        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> CompleteWhitelist
+        {
+            get
+            {
+                foreach (var flowElement in FlowData.Pipeline.FlowElements)
+                {
+                    if (flowElement.EvidenceKeyFilter is EvidenceKeyFilterWhitelist whiteList)
+                    {
+                        yield return new KeyValuePair<string, IEnumerable<string>>(flowElement.ElementDataKey, whiteList.Whitelist.Select(kvp => kvp.Key));
+                    }
+                }
+            }
+        }
     }
 }

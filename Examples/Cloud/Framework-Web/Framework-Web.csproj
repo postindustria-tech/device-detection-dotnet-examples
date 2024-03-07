@@ -221,6 +221,7 @@
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.72" />
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.72" />
     <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.72" />
+    <PackageReference Include="FiftyOne.Pipeline.JavaScriptBuilder" Version="4.4.72" />
     <PackageReference Include="FiftyOne.Pipeline.Web">
       <Version>4.4.44</Version>
     </PackageReference>
@@ -343,6 +344,7 @@
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.71" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.71" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.71" />
+    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.72" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.72" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.72" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.72" />

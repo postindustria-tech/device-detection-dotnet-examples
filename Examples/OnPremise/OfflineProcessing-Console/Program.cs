@@ -50,7 +50,7 @@ using YamlDotNet.Serialization;
 /// performance and predictive power using Performance Profile, Graph and Difference and Drift 
 /// settings.
 /// 
-/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet/blob/master/Examples/OnPremise/OfflineProcessing-Console/Program.cs). 
+/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet-examples/blob/master/Examples/OnPremise/OfflineProcessing-Console/Program.cs). 
 /// 
 /// @include{doc} example-require-datafile.txt
 /// 

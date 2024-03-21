@@ -47,7 +47,7 @@ using System.Net.Http;
 /// "Biggest" options.
 /// 
 /// # Data Files
-/// You can find out more about data files, licenses etc. at our (FAQ page)[https://51degrees.com/resources/faqs]
+/// You can find out more about data files, licenses etc. at our [FAQ page](https://51degrees.com/resources/faqs)
 /// 
 /// ## Enterprise Data File
 /// Enterprise (fully-featured) data files are typically released by 51Degrees four days a week
@@ -64,7 +64,7 @@ using System.Net.Http;
 /// ## Lite Data File
 /// Lite data files (free-to-use, limited capabilities, no license key required) are created roughly
 /// once a month and cannot be updated using auto-update, they may be downloaded from
-/// (Github)[href=https://github.com/51Degrees/device-detection-data] and are included with
+/// [Github](https://github.com/51Degrees/device-detection-data) and are included with
 /// source distributions of this software.
 /// 
 /// # Update on Start-Up
@@ -133,7 +133,7 @@ using System.Net.Http;
 /// ```
 /// 
 /// # Location
-/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet/blob/master/Examples/OnPremise/UpdateDataFile-Console/Program.cs).
+/// This example is available in full on [GitHub](https://github.com/51Degrees/device-detection-dotnet-examples/blob/master/Examples/OnPremise/UpdateDataFile-Console/Program.cs).
 /// </summary>
 namespace FiftyOne.DeviceDetection.Examples.OnPremise.UpdateDataFile
 {
@@ -334,14 +334,19 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.UpdateDataFile
                 {
                     licenseKey = Environment.GetEnvironmentVariable(Constants.LICENSE_KEY_ENV_VAR);
                 }
-                if (licenseKey == null || ExampleUtils.IsInvalidKey(licenseKey))
+                const string keySubmissionPaths = "as the second command line argument to this program, or as " +
+                        $"an environment variable named '{Constants.LICENSE_KEY_ENV_VAR}'";
+                if (licenseKey == null)
                 {
                     logger.LogError("In order to test this example you will need a 51Degrees " +
                         "Enterprise license which can be obtained on a trial basis or purchased " +
                         "from our pricing page https://51degrees.com/pricing. You must supply the " +
-                        "license key as the second command line argument to this program, or as " +
-                        $"an environment variable named '{Constants.LICENSE_KEY_ENV_VAR}'");
+                        "license key " + keySubmissionPaths);
                     throw new ArgumentException("No license key available", nameof(licenseKey));
+                }
+                if (ExampleUtils.IsInvalidKey(licenseKey))
+                {
+                    logger.LogWarning("The license key supplied (" + keySubmissionPaths + ") is probably invalid.");
                 }
 
                 return licenseKey;

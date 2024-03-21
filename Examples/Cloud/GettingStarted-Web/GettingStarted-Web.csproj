@@ -11,18 +11,22 @@
 
   <ItemGroup>
     <Content Remove="appsettings.json" />
+    <Content Remove="appsettings_51.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="appsettings_51.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.62" />
-    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.41" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.22" />
+    <PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.108" />
+    <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.74" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.28" />
   </ItemGroup>
 
   <ItemGroup>

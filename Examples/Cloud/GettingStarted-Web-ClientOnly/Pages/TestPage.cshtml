@@ -38,7 +38,9 @@
     var browserName = null;
     var browserVersion = null;
     window.onload = function () {
+        test = 'loading_in_onload'
         fod.complete(function (data) {
+            test = 'loading_in_fod_complete'
 
             // Record the complete data for developer inspection.
             console.log(data);
@@ -55,5 +57,6 @@
             complete.innerText = test;
             document.getElementById("content").appendChild(complete);
         });
+        test = 'loading_after_onload'
     }
 </script>

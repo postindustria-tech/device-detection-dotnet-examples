@@ -54,19 +54,23 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
             string[] args,
             CancellationToken stopToken = default)
         {
-            var configOverrides = CreateConfigOverrides();
-            return CreateHostBuilder(configOverrides, args).Build().RunAsync(
+            var config = CreateConfiguration();
+            var configOverrides = CreateConfigOverrides(config);
+            return CreateHostBuilder(config, configOverrides, args).Build().RunAsync(
                 stopToken);
         }
 
         public static IHostBuilder CreateHostBuilder(
-            IDictionary<string, string> overrides, string[] args) =>
-            Host.CreateDefaultBuilder(args)
+            IConfiguration baseConfig,
+            IDictionary<string, string> overrides,
+            string[] args)
+            => Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(builder =>
                 {
                     builder.ConfigureAppConfiguration(config =>
                     {
-                        config.AddJsonFile("appsettings.json")
+                        config
+                            .AddConfiguration(baseConfig)
                             .AddInMemoryCollection(overrides);
                     })
                     .UseUrls(Constants.AllUrls)
@@ -74,19 +78,20 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                     .UseStaticWebAssets();
                 });
 
+        private static IConfiguration CreateConfiguration()
+            => new ConfigurationBuilder()
+                .AddJsonFile("appsettings_51.json")
+                .Build();
+
         /// <summary>
         /// This section would not normally be needed. We're just checking for the resource key
         /// so that if it's not set, we can override it with the one from the environment variables
         /// or show a message that's very clear about what needs to be done in the content of 
         /// this example.
         /// </summary>
-        private static Dictionary<string, string> CreateConfigOverrides()
+        private static Dictionary<string, string> CreateConfigOverrides(IConfiguration config)
         {
             var result = new Dictionary<string, string>();
-
-            var config = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .Build();
 
             PipelineOptions options = new PipelineWebIntegrationOptions();
             var section = config.GetRequiredSection("PipelineOptions");
@@ -104,7 +109,9 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
                 // Get the index of the cloud request engine element in the config file so that
                 // we can create an override key for it.
                 var cloudEngineOptions = options.GetElementConfig(nameof(CloudRequestEngine));
+                Console.WriteLine($"{nameof(cloudEngineOptions)}.{nameof(cloudEngineOptions.BuilderName)} = '{cloudEngineOptions.BuilderName}'");
                 var cloudEngineIndex = options.Elements.IndexOf(cloudEngineOptions);
+                Console.WriteLine($"{nameof(CloudRequestEngine)} located at element {cloudEngineIndex}.");
                 var resourceKeyConfigKey = $"PipelineOptions:Elements:{cloudEngineIndex}" +
                     $":BuildParameters:ResourceKey";
 
@@ -113,6 +120,7 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
 
                 if (string.IsNullOrEmpty(resourceKey) == false)
                 {
+                    Console.WriteLine($"Attempting to override '{resourceKeyConfigKey}'");
                     result.Add(resourceKeyConfigKey, resourceKey);
                 }
                 else

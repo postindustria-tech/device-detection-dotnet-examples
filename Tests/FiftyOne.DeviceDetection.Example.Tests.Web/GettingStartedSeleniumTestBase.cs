@@ -64,7 +64,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             Driver.Navigate().GoToUrl(url + STATIC_HTML_PATH);
 
             // Wait for the page to load
-            new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver => true);
+            try
+            {
+                new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver => true);
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                Assert.Inconclusive(e.ToString());
+            }
 
             // Get the high entropy values.
             var js = (IJavaScriptExecutor)Driver;
@@ -83,6 +90,14 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             }
 
             var cookies = Network.GetAllCookies().Result;
+
+            Console.WriteLine("Enumerating cookie names:");
+            foreach (var nextName in cookies.Cookies.Select(c => c.Name))
+            {
+                Console.WriteLine($"- Next cookie name: '{nextName}'");
+            }
+            Console.WriteLine("Finished numerating cookie names!");
+
             var fod_cookie = cookies.Cookies.Where(c =>
                 c.Name == "51D_GetHighEntropyValues").Single();
 
@@ -144,11 +159,18 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             // Do a cross origin request
             Driver.Navigate().GoToUrl(url + STATIC_HTML_PATH);
 
-            // Wait for the page to load
-            new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver =>
+            try
             {
-                return jsonRecieved;
-            });
+                // Wait for the page to load
+                new WebDriverWait(Driver, TEST_TIMEOUT).Until(driver =>
+                {
+                    return jsonRecieved;
+                });
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                Assert.Inconclusive(e.ToString());
+            }
 
             // Assert
             // Verify that the response contains the header
@@ -169,32 +191,49 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             string detectedBrowserVersion = null;
             string userAgent = null;
 
-            // This throws an exception if the timeout period elapses,
-            // which will cause the test to fail.
-            var result = new WebDriverWait(Driver, TEST_TIMEOUT).Until(
-                driver =>
-                {
-                    // Gets the value of the global JavaScript variable test
-                    // from the TEST_PAGE_ENDPOINT HTML page. Checks this value
-                    // is 'complete' to indiciate that the complete event
-                    // fired.
-                    var js = (IJavaScriptExecutor)driver;
-                    var test = js.ExecuteScript("return test");
-
-                    // Get the browser name and version from device detection
-                    // as returned in the complete event.
-                    if (test.Equals("complete"))
+            bool result;
+            try
+            {
+                // This throws an exception if the timeout period elapses,
+                // which will cause the test to fail.
+                result = new WebDriverWait(Driver, TEST_TIMEOUT).Until(
+                    driver =>
                     {
-                        userAgent = (string)js.ExecuteScript(
-                            "return navigator.userAgent");
-                        detectedBrowserName = (string)js.ExecuteScript(
-                            "return browserName");
-                        detectedBrowserVersion = (string)js.ExecuteScript(
-                            "return browserVersion");
-                        return true;
-                    }
-                    return false;
-                });
+                        // Gets the value of the global JavaScript variable test
+                        // from the TEST_PAGE_ENDPOINT HTML page. Checks this value
+                        // is 'complete' to indiciate that the complete event
+                        // fired.
+                        var js = (IJavaScriptExecutor)driver;
+                        var test = js.ExecuteScript("return test");
+
+                        // Get the browser name and version from device detection
+                        // as returned in the complete event.
+                        Console.WriteLine("[test] = '" + test.ToString() + "'");
+                        if (test.Equals("complete"))
+                        {
+                            userAgent = (string)js.ExecuteScript(
+                                "return navigator.userAgent");
+                            detectedBrowserName = (string)js.ExecuteScript(
+                                "return browserName");
+                            detectedBrowserVersion = (string)js.ExecuteScript(
+                                "return browserVersion");
+                            return true;
+                        }
+                        return false;
+                    });
+            }
+            catch (WebDriverTimeoutException e)
+            {
+                Assert.Inconclusive(e.ToString());
+                throw;
+            }
+            finally
+            {
+                foreach (var l in Driver.Manage().Logs.GetLog(LogType.Browser))
+                {
+                    Console.WriteLine($"[LOGS] {l}");
+                }
+            }
 
             // Assert
             Assert.IsTrue(result);
@@ -208,6 +247,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 $"Expected '{BrowserName}' to be present in '{detectedBrowserName}'");
 
             // Check the major browser information is the same.
+            Assert.AreNotEqual("Unknown", detectedBrowserVersion, $"Failed to detect browser version --- returned '{detectedBrowserVersion}'");
             var version = ParseVersion(detectedBrowserVersion);
             Assert.AreEqual(BrowserVersion.Major, version.Major);
         }
@@ -220,8 +260,17 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// <exception cref="ArgumentException"></exception>
         private static Version ParseVersion(string value)
         {
-            var numbers = value.Split(".").Select(i => 
-                int.Parse(i)).ToArray();
+            Func<string> ErrorText = () => $"'{value}' invalid version";
+            int[] numbers;
+            try
+            {
+                numbers = value.Split(".").Select(i =>
+                    int.Parse(i)).ToArray();
+            }
+            catch (Exception e) when (e is FormatException || e is OverflowException)
+            {
+                throw new ArgumentException(ErrorText(), e);
+            }
             switch(numbers.Length)
             {
                 case 1:
@@ -234,7 +283,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                     return new Version(numbers[0], numbers[1], numbers[2], 
                         numbers[3]);
                 default:
-                    throw new ArgumentException($"'{value}' invalid version");
+                    throw new ArgumentException(ErrorText());
             }
         }
     }

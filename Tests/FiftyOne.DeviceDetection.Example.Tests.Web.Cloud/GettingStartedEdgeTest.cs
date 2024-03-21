@@ -27,8 +27,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud
     [TestClass]
     public class GettingStartedEdgeTest : GettingStartedSeleniumTest
     {
-        [TestInitialize]
-        public void TestInitialize()
+        [ClassInitialize]
+        public void ClassInitialize()
         {
             InitializeEdgeDriver();
         }

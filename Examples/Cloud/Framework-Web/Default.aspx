@@ -68,12 +68,26 @@
             The following values are determined by sever-side device detection
             on the first request:
         </p>
+        <%
+            string isMobileDeviceString;
+            try
+            {
+                isMobileDeviceString = Request.Browser.IsMobileDevice ? "Yes" : "No";
+            }
+            catch (Exception ex)
+            {
+                isMobileDeviceString = "Unknown";
+        %>
+                <p class="lightred"><%: ex %></p>
+        <%
+            }
+        %>
         <p>
             Note that all values below are retrieved using the strongly typed approach, 
             which is new for version 4. In order to provide easier migration for sites using 
             version 3 of this API, you can also access some properties from the 
             HttpBrowserCapabilities object. For example, is this site being accessed with 
-            a mobile device? <strong><%= Request.Browser.IsMobileDevice ? "Yes" : "No" %></strong></p>
+            a mobile device? <strong><%: isMobileDeviceString %></strong></p>
         <table>
             <tr>
                 <th>Key</th>
@@ -223,15 +237,20 @@
             // When the event fires, use the supplied data to populate a new table.
             let fieldValues = [];
 
-            var hardwareName = typeof data.device.hardwarename == "undefined" ?
-                "Unknown" : data.device.hardwarename.join(", ")
-            fieldValues.push(["Hardware Name: ", hardwareName]);
-            fieldValues.push(["Platform: ",
-                data.device.platformname + " " + data.device.platformversion]);
-            fieldValues.push(["Browser: ",
-                data.device.browsername + " " + data.device.browserversion]);
-            fieldValues.push(["Screen width (pixels): ", data.device.screenpixelswidth]);
-            fieldValues.push(["Screen height (pixels): ", data.device.screenpixelsheight]);
+            if (data.errors) {
+                fieldValues = data.errors.map(e => ["Error: ", e, "lightred"]);
+            }
+            if (data.device) {
+                var hardwareName = typeof data.device.hardwarename == "undefined" ?
+                    "Unknown" : data.device.hardwarename.join(", ")
+                fieldValues.push(["Hardware Name: ", hardwareName]);
+                fieldValues.push(["Platform: ",
+                    data.device.platformname + " " + data.device.platformversion]);
+                fieldValues.push(["Browser: ",
+                    data.device.browsername + " " + data.device.browserversion]);
+                fieldValues.push(["Screen width (pixels): ", data.device.screenpixelswidth]);
+                fieldValues.push(["Screen height (pixels): ", data.device.screenpixelsheight]);
+            }
             displayValues(fieldValues);
         });
     }
@@ -246,7 +265,7 @@
 
         fieldValues.forEach(function (entry) {
             var tr = document.createElement("tr");
-            tr.classList.add("lightyellow");
+            tr.classList.add(entry.length > 2 ? entry[2] : "lightyellow");
             addToRow(tr, "td", entry[0], true);
             addToRow(tr, "td", entry[1], false);
             table.appendChild(tr);

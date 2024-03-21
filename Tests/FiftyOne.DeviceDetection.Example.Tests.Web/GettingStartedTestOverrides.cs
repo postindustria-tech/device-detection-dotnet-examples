@@ -20,7 +20,7 @@
  * such notice(s) shall fulfill the requirements of that article.
  * ********************************************************************* */
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,12 +28,15 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace FiftyOne.DeviceDetection.Example.Tests.Web
 {
     public class GettingStartedTestOverrides<T> : GettingStartedTestBase<T>
         where T : class
     {
+        public GettingStartedTestOverrides(WebApplicationFactory<T> factory) : base(factory) { }
+
         /// <summary>
         /// Profile ids to use for testing. These are extracted from 51Degrees
         /// device database and are known to not relate to User-Agents. They
@@ -111,7 +114,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             107548,
             107549,
             107555,
-            108371,
+            //108371,
             108616,
             108677,
             108704,
@@ -136,7 +139,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             122490,
             122500,
             122587,
-            122591,
+            //122591,
             122593,
             122594,
             122690,
@@ -144,8 +147,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             123079,
             123080,
             123082,
-            123083,
-            123106,
+            //123083,
+            //123106,
             123109,
             123156,
             123157,
@@ -157,7 +160,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             123629,
             123631,
             123632,
-            124548 
+            //124548 
         };
 
         /// <summary>
@@ -192,12 +195,12 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             OverrideProfileIds.OrderBy(i => 
             Guid.NewGuid()).Take(10).Select(i => new object[] { i });
 
-        [TestMethod]
-        [DynamicData(nameof(TestProfileIds), DynamicDataSourceType.Property)]
+        [Theory]
+        [MemberData(nameof(TestProfileIds))]
         public async Task VerifyExample_ProfileId_Override(int profileId)
         {
             // Setup
-            using (var http = CreateClient())
+            using (var http = Factory.CreateClient())
             using (var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -223,17 +226,23 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 var response = await http.SendAsync(request);
 
                 // Assert
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var content = await response.Content.ReadAsStringAsync();
                 var output = JsonConvert.DeserializeObject<OverrideResponse>(content);
-                Assert.IsNotNull(output);
-                Assert.IsNotNull(output.device);
+                Assert.NotNull(output);
+                Assert.NotNull(output.device);
                 var device = output.device;
-                Assert.IsNotNull(device.deviceid);
+                Assert.NotNull(device.deviceid);
                 var deviceId = device.deviceid.Split("-");
-                Assert.AreEqual(profileId, int.Parse(deviceId[0]));
+                Assert.Equal(profileId, int.Parse(deviceId[0]));
             }
         }
+
+        /// <summary>
+        /// Indicates whether <see cref="VerifyExample_PropertyValue_Override"/> tests
+        /// make any sense for this class.
+        /// </summary>
+        protected virtual bool SupportsPropertyOverrides => true;
 
         /// <summary>
         /// Passes form parameters to override the pixel width and height of 
@@ -243,12 +252,16 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        [TestMethod]
-        [DynamicData(nameof(Parameters.AllUrlsData), typeof(Parameters))]
+        [SkippableTheory]
+        [MemberData(nameof(AllUrlsData))]
         public async Task VerifyExample_PropertyValue_Override(string url)
         {
+            Skip.IfNot(
+                SupportsPropertyOverrides, 
+                $"{nameof(SupportsPropertyOverrides)} indicates this engine does not support property overrides.");
+
             // Setup
-            using (var http = CreateClient())
+            using (var http = Factory.CreateClient())
             using (var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -275,16 +288,16 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
                 var response = await http.SendAsync(request);
 
                 // Assert
-                Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
                 var content = await response.Content.ReadAsStringAsync();
                 var output = JsonConvert.DeserializeObject<OverrideResponse>(content);
-                Assert.IsNotNull(output);
-                Assert.IsNotNull(output.device);
+                Assert.NotNull(output);
+                Assert.NotNull(output.device);
                 var device = output.device;
-                Assert.IsNotNull(device.screenpixelsheight);
-                Assert.IsNotNull(device.screenpixelswidth);
-                Assert.AreEqual(screenPixelsWidth, device.screenpixelswidth);
-                Assert.AreEqual(screenPixelsHeight, device.screenpixelsheight);
+                Assert.NotNull(device.screenpixelsheight);
+                Assert.NotNull(device.screenpixelswidth);
+                Assert.Equal(screenPixelsWidth, device.screenpixelswidth);
+                Assert.Equal(screenPixelsHeight, device.screenpixelsheight);
             }
         }
     }

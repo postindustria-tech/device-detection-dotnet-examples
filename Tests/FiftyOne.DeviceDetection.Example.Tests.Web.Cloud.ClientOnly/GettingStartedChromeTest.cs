@@ -27,8 +27,8 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web.Cloud.ClientOnly
     [TestClass]
     public class GettingStartedChromeTest : GettingStartedSeleniumTest
     {
-        [TestInitialize]
-        public void TestInitialize()
+        [ClassInitialize]
+        public void ClassInitialize()
         {
             InitializeChromeDriver();
         }

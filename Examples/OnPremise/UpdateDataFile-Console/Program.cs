@@ -43,15 +43,14 @@ using System.Net.Http;
 /// # License Key
 /// In order to test this example you will need a 51Degrees Enterprise license which can be
 /// purchased from our
-/// <a href="https://51degrees.com/pricing">pricing page</a>. Look for our "Bigger" or
-/// "Biggest" options.
+/// <a href="https://51degrees.com/pricing">pricing page</a>.
 /// 
 /// # Data Files
 /// You can find out more about data files, licenses etc. at our [FAQ page](https://51degrees.com/resources/faqs)
 /// 
 /// ## Enterprise Data File
-/// Enterprise (fully-featured) data files are typically released by 51Degrees four days a week
-/// (Mon-Thu) and on-premise deployments can fetch and download those files automatically. Equally,
+/// Enterprise (fully-featured) data files are typically released by 51Degrees five days a week
+/// (Mon-Fri) and on-premise deployments can fetch and download those files automatically. Equally,
 /// customers may choose to download the files themselves and move them into place to be detected
 /// by the 51Degrees filesystem watcher.
 /// 

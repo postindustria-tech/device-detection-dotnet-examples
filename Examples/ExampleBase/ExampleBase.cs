@@ -112,6 +112,7 @@ namespace FiftyOne.DeviceDetection.Examples
             // Consume the stream start event.
             yamlReader.Consume<StreamStart>();
             int records = 0;
+            int skipped = 0;
             // Keep going as long as we have more document records.
             while (yamlReader.TryConsume<DocumentStart>(out _))
             {
@@ -119,12 +120,28 @@ namespace FiftyOne.DeviceDetection.Examples
                 records++;
                 if (logger != null && records % 1000 == 0)
                 {
-                    logger.LogInformation($"Processed {records} records");
+                    logger.LogInformation($"Processed {records} records ({skipped} skipped)");
                 }
 
                 // Deserialize the record
                 var data = deserializer.Deserialize<Dictionary<string, object>>(yamlReader);
-                yield return data;
+
+                // Remove null values
+                foreach(var keyWithNullValue in data.Where(kvp => kvp.Value is null).Select(kvp => kvp.Key).ToList())
+                {
+                    logger.LogWarning($"Document at offset {records-1} contains null value for key: '{keyWithNullValue}'!");
+                    data.Remove(keyWithNullValue);
+                }
+
+                if (data.Count > 0)
+                {
+                    yield return data;
+                }
+                else
+                {
+                    logger.LogWarning($"Document at offset {records - 1} contains no usable evidence!");
+                    ++skipped;
+                }
 
                 // Required to move to the start of the next record.
                 yamlReader.TryConsume<DocumentEnd>(out _);

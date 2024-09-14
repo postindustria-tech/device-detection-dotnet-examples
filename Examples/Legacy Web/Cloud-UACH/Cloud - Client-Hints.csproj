@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.174" />
+    <PackageReference Include="FiftyOne.DeviceDetection" Version="4.4.175" />
     <PackageReference Include="FiftyOne.Pipeline.Web" Version="4.4.102" />
   </ItemGroup>
   

@@ -81,6 +81,10 @@
                 <p class="lightred"><%: ex %></p>
         <%
             }
+
+            var pipelineCapabilities = Request.Browser as PipelineCapabilities;
+            if (pipelineCapabilities != null)
+            {
         %>
         <p>
             Note that all values below are retrieved using the strongly typed approach, 
@@ -94,38 +98,47 @@
                 <th>Value</th>
             </tr>
             <% 
-                // Put the flow data and device data instances into local variables so we don't
-                // have to keep grabbing them.
-                var flowData = ((PipelineCapabilities)Request.Browser).FlowData;
+                    // Put the flow data and device data instances into local variables so we don't
+                    // have to keep grabbing them.
+                    var flowData = pipelineCapabilities.FlowData;
 
-                var errors = flowData.Errors;
-                if (errors != null) { 
-                    foreach (var nextError in errors) { 
+                    var errors = flowData.Errors;
+                    if (errors != null)
+                    {
+                        foreach (var nextError in errors)
+                        {
             %>
             <tr class="lightred"><td><b>Pipeline Error:</b></td><td> <%: nextError.ExceptionData %></td></tr>
             <% 
+                        }
                     }
-                }
 
-                IDeviceData deviceData = null;
-                try
-                {
-                    deviceData = flowData.Get<IDeviceData>();
-                }
-                catch (PipelineException ex)
-                {
+                    IDeviceData deviceData = null;
+                    new System.Threading.Thread(() =>
+                    {
+                        Console.WriteLine(
+                            "[!!!] HardwareName: "
+                            + flowData.Get<IDeviceData>().HardwareName.GetHumanReadable());
+                    }).Start();
+                    try
+                    {
+                        deviceData = flowData.Get<IDeviceData>();
+                    }
+                    catch (PipelineException ex)
+                    {
             %>
             <tr class="lightred"><td><b>Get IDeviceData Error:</b></td><td> <%: ex %></td></tr>
             <% 
-                }
+                    }
 
-                if (deviceData != null) {
-                    // Note that below we are using some helper methods from the
-                    // FiftyOne.DeviceDeteciton.Examples project (TryGetValue and GetHumanReadable)
-                    // These are mostly intended to handle scenarios where device detection does
-                    // not have an answer.
-                    // In a production scenario, you will probably want to handle these scenarios 
-                    // differently. Feel free to copy these helpers if they are useful though.
+                    if (deviceData != null)
+                    {
+                        // Note that below we are using some helper methods from the
+                        // FiftyOne.DeviceDeteciton.Examples project (TryGetValue and GetHumanReadable)
+                        // These are mostly intended to handle scenarios where device detection does
+                        // not have an answer.
+                        // In a production scenario, you will probably want to handle these scenarios 
+                        // differently. Feel free to copy these helpers if they are useful though.
             %>
             <tr class="lightyellow"><td><b>Hardware Vendor:</b></td><td> <%= deviceData.TryGetValue(d => d.HardwareVendor.GetHumanReadable()) %></td></tr>
             <tr class="lightyellow"><td><b>Hardware Name:</b></td><td> <%= deviceData.TryGetValue(d => d.HardwareName.GetHumanReadable()) %></td></tr>
@@ -139,9 +152,9 @@
             <tr class="lightyellow"><td><b>Screen width (pixels):</b></td><td> <%= deviceData.TryGetValue(d => d.ScreenPixelsWidth.GetHumanReadable()) %></td></tr>
             <tr class="lightyellow"><td><b>Screen height (pixels):</b></td><td> <%= deviceData.TryGetValue(d => d.ScreenPixelsHeight.GetHumanReadable()) %></td></tr>
             <%  
-                }
-                // Get the engine that is used to make requests to the cloud service.
-                var engine = flowData.Pipeline.GetElement<DeviceDetectionCloudEngine>();
+                    }
+                    // Get the engine that is used to make requests to the cloud service.
+                    var engine = flowData.Pipeline.GetElement<DeviceDetectionCloudEngine>();
             %>
         </table>
         <br />
@@ -154,7 +167,8 @@
                     <th>Key</th>
                     <th>Value</th>
                 </tr>
-                <% foreach (var evidence in flowData.GetEvidence().AsDictionary()) { %>
+                <% foreach (var evidence in flowData.GetEvidence().AsDictionary())
+                    { %>
                     <tr class="<%= engine.EvidenceKeyFilter.Include(evidence.Key) ? "lightgreen" : "lightyellow" %>">
                         <td><b><%= evidence.Key %></b></td>
                         <td><%= evidence.Value %></td>
@@ -163,6 +177,13 @@
             </table>
         </div>
         <br />
+
+        <%      } else { %>
+        <p class="lightred">
+            <tt>Request.Browser</tt> is not a <tt>PipelineCapabilities</tt>,
+            but a <tt><%= Request.Browser.GetType().FullName %></tt>.
+        </p>
+        <%      } %>
 
         <div id="response-headers">
             <h3>Response headers</h3>
@@ -217,7 +238,12 @@
             client-side values below will appear in the evidence values used and server-side results
             after the refresh.
         </p>
-        <% if (engine.DataSourceTier == "Lite") { %>
+        <% if (pipelineCapabilities != null &&
+                pipelineCapabilities
+                .FlowData
+                .Pipeline
+                .GetElement<DeviceDetectionCloudEngine>()
+                .DataSourceTier == "Lite") { %>
             <div class="example-alert">
                 WARNING: You are using the free 'Lite' data file. This does not include the client-side
                 evidence capabilities of the paid-for data file, so you will not see any additional

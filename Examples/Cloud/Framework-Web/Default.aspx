@@ -114,12 +114,6 @@
                     }
 
                     IDeviceData deviceData = null;
-                    new System.Threading.Thread(() =>
-                    {
-                        Console.WriteLine(
-                            "[!!!] HardwareName: "
-                            + flowData.Get<IDeviceData>().HardwareName.GetHumanReadable());
-                    }).Start();
                     try
                     {
                         deviceData = flowData.Get<IDeviceData>();

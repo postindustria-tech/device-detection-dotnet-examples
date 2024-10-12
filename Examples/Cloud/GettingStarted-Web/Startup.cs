@@ -21,7 +21,6 @@
  * ********************************************************************* */
 
 using FiftyOne.DeviceDetection.Cloud.FlowElements;
-using FiftyOne.DeviceDetection.Uach;
 using FiftyOne.Pipeline.CloudRequestEngine.FlowElements;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -116,7 +115,6 @@ namespace FiftyOne.DeviceDetection.Examples.Cloud.GettingStartedWeb
 
             // Add the cloud request and device detection engine builder to services so that the
             // system can find the builders when it needs to.
-            services.AddSingleton<UachJsConversionElementBuilder>();
             services.AddSingleton<CloudRequestEngineBuilder>();
             services.AddSingleton<DeviceDetectionCloudEngineBuilder>();
             // Configure the services needed by device detection and create the 51Degrees Pipeline

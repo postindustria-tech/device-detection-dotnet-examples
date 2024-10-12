@@ -4,10 +4,6 @@
   "PipelineOptions": {
     "Elements": [
       {
-        // Required to unpack the GetHighEntropyValues base 64 encoded string into UACH HTTP headers.
-        "BuilderName": "UachJsConversionElement"
-      },
-      {
         "BuilderName": "DeviceDetectionHashEngine",
         "BuildParameters": {
           "DataFile": "51Degrees-LiteV4.1.hash",

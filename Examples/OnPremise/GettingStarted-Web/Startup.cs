@@ -21,7 +21,6 @@
  * ********************************************************************* */
 
 using FiftyOne.DeviceDetection.Hash.Engine.OnPremise.FlowElements;
-using FiftyOne.DeviceDetection.Uach;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -116,7 +115,6 @@ namespace FiftyOne.DeviceDetection.Examples.OnPremise.GettingStartedWeb
             // Add the hash engine builder to services so that the system can find the builder
             // when it needs to.
             services.AddSingleton<DeviceDetectionHashEngineBuilder>();
-            services.AddSingleton<UachJsConversionElementBuilder>();
             // Configure the services needed by device detection and create the 51Degrees Pipeline
             // instance that will be used to process requests.
             services.AddFiftyOne(Configuration);

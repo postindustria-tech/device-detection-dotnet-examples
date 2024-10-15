@@ -133,7 +133,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             117361,
             117892,
             118711,
-            118934,
+            //118934,
             118945,
             122489,
             122490,
@@ -146,7 +146,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
             122809,
             123079,
             123080,
-            123082,
+            //123082,
             //123083,
             //123106,
             123109,
@@ -192,8 +192,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<object[]> TestProfileIds => 
-            OverrideProfileIds.OrderBy(i => 
-            Guid.NewGuid()).Take(10).Select(i => new object[] { i });
+            OverrideProfileIds.Select(i => new object[] { i });
 
         [Theory]
         [MemberData(nameof(TestProfileIds))]

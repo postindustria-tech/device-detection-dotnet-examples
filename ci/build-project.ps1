@@ -32,7 +32,6 @@ if ($BuildMethod -eq "dotnet"){
     ".\Examples\OnPremise\OfflineProcessing-Console\OfflineProcessing-Console.csproj",
     ".\Examples\OnPremise\Performance-Console\Performance-Console.csproj",
     ".\Examples\OnPremise\UpdateDataFile-Console\UpdateDataFile-Console.csproj",
-    ".\Tests\FiftyOne.DeviceDetection.Example.Tests\FiftyOne.DeviceDetection.Example.Tests.csproj",
     ".\Tests\FiftyOne.DeviceDetection.Example.Tests.Web\FiftyOne.DeviceDetection.Example.Tests.Web.csproj"
     )
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Examples.Cloud.Metadata</AssemblyName>
     <RootNamespace>Examples.Cloud.Metadata</RootNamespace>
     <Platforms>AnyCPU;x64;x86</Platforms>

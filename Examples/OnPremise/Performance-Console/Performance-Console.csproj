@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>FiftyOne.DeviceDetection.Examples.OnPremise.Performance</RootNamespace>
     <AssemblyName>FiftyOne.DeviceDetection.Examples.OnPremise.Performance</AssemblyName>
     <Platforms>AnyCPU;x64;x86</Platforms>

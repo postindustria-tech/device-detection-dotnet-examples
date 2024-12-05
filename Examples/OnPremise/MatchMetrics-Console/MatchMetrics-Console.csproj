@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>FiftyOne.DeviceDetection.Examples.OnPremise.MatchMetrics</RootNamespace>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <Configurations>Debug;Release;CoreRelease</Configurations>

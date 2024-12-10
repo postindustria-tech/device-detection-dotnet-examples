@@ -29,7 +29,7 @@ namespace FiftyOne.DeviceDetection.Example.Tests.Web
     public static class Parameters
     {
         public const string BASE_PROPERTIES = "HardwareVendor,HardwareName,DeviceType,PlatformVendor,PlatformName,PlatformVersion,BrowserVendor,BrowserName,BrowserVersion";
-        public const string ALL_PROPERTIES = null;
+        public const string ALL_PROPERTIES = "";
         public const string BROWSER_PROPERTIES = BASE_PROPERTIES + ",SetHeaderBrowserAccept-CH";
         public const string HARDWARE_PROPERTIES = BASE_PROPERTIES + ",SetHeaderHardwareAccept-CH";
         public const string PLATFORM_PROPERTIES = BASE_PROPERTIES + ",SetHeaderPlatformAccept-CH";

@@ -13,7 +13,7 @@ jobs:
     with:
       repo-name: ${{ github.event.repository.name }}
       org-name: ${{ github.event.repository.owner.login }}
-      common-ci-ref: c99c9ea328a6e9c12ac0a95856a90a3fa0b3d178
+      common-ci-ref: 6ac4cc710f2fa7151001615f81ba25bb61c61e0d
       cache-assets: true
     secrets:
       token: ${{ secrets.ACCESS_TOKEN }}

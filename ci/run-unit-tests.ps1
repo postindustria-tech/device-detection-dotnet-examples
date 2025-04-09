@@ -9,6 +9,7 @@ param(
 )
 
 ./dotnet/run-unit-tests.ps1 `
+    -Debug `
     -RepoName $RepoName `
     -ProjectDir $ProjectDir `
     -Name $Name `
